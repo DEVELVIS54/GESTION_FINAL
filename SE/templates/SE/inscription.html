@@ -1,0 +1,389 @@
+<!-- templates/inscription/inscription.html -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .card-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .card-header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        /* Messages */
+        
+        .messages {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        /* Form */
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .form-control.error {
+            border-color: #e74c3c;
+        }
+        
+        .error-text {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+        }
+        /* Profile cards */
+        
+        .profile-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .profile-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .profile-card:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .profile-card.selected {
+            border-color: #2c3e50;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .profile-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .profile-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        /* Button */
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: #1a252f;
+        }
+        /* Links */
+        
+        .links {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        /* Responsive */
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 20px;
+            }
+            .profile-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header">
+                <h1>📝 Créer un compte</h1>
+                <p>Rejoignez notre plateforme immobilière</p>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body">
+                <!-- Messages -->
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {% if message.tags == 'success' %}✅{% else %}❌{% endif %} {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Profile Selection -->
+                <div class="form-group">
+                    <label>Je suis :</label>
+                    <div class="profile-options">
+                        <div class="profile-card" onclick="selectProfile('client')" id="card-client">
+                            <div class="profile-icon">👤</div>
+                            <div class="profile-name">Client</div>
+                        </div>
+                        <div class="profile-card" onclick="selectProfile('bailleur')" id="card-bailleur">
+                            <div class="profile-icon">👑</div>
+                            <div class="profile-name">Bailleur</div>
+                        </div>
+                        <div class="profile-card" onclick="selectProfile('agent')" id="card-agent">
+                            <div class="profile-icon">🤝</div>
+                            <div class="profile-name">Agent</div>
+                        </div>
+                        <div class="profile-card" onclick="selectProfile('manager')" id="card-manager">
+                            <div class="profile-icon">👨‍💼</div>
+                            <div class="profile-name">Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulaire -->
+                <form method="POST" id="inscriptionForm">
+                    {% csrf_token %}
+
+                    <!-- Champ caché pour le rôle -->
+                    <input type="hidden" name="role" id="id_role" value="client">
+
+                    <!-- Informations personnelles -->
+                    <div class="form-group">
+                        <label for="id_nom">Nom *</label>
+                        <input type="text" name="nom" id="id_nom" class="form-control {% if form.nom.errors %}error{% endif %}" value="{{ form.nom.value|default:'' }}" required> {% if form.nom.errors %}
+                        <span class="error-text">{{ form.nom.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_prenom">Prénom *</label>
+                        <input type="text" name="prenom" id="id_prenom" class="form-control {% if form.prenom.errors %}error{% endif %}" value="{{ form.prenom.value|default:'' }}" required> {% if form.prenom.errors %}
+                        <span class="error-text">{{ form.prenom.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_email">Email *</label>
+                        <input type="email" name="email" id="id_email" class="form-control {% if form.email.errors %}error{% endif %}" value="{{ form.email.value|default:'' }}" required> {% if form.email.errors %}
+                        <span class="error-text">{{ form.email.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_username">Nom d'utilisateur *</label>
+                        <input type="text" name="username" id="id_username" class="form-control {% if form.username.errors %}error{% endif %}" value="{{ form.username.value|default:'' }}" required> {% if form.username.errors %}
+                        <span class="error-text">{{ form.username.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_telephone">Téléphone *</label>
+                        <input type="tel" name="telephone" id="id_telephone" class="form-control {% if form.telephone.errors %}error{% endif %}" value="{{ form.telephone.value|default:'' }}" required> {% if form.telephone.errors %}
+                        <span class="error-text">{{ form.telephone.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password1">Mot de passe *</label>
+                        <input type="password" name="password1" id="id_password1" class="form-control {% if form.password1.errors %}error{% endif %}" required> {% if form.password1.errors %}
+                        <span class="error-text">{{ form.password1.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password2">Confirmer le mot de passe *</label>
+                        <input type="password" name="password2" id="id_password2" class="form-control {% if form.password2.errors %}error{% endif %}" required> {% if form.password2.errors %}
+                        <span class="error-text">{{ form.password2.errors.0 }}</span> {% endif %}
+                    </div>
+
+                    <!-- Conditions -->
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer;">
+                            <input type="checkbox" required style="margin-top: 3px;">
+                            <span>
+                                J'accepte les conditions d'utilisation
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Bouton d'inscription -->
+                    <button type="submit" class="btn">
+                        <span>S'inscrire</span>
+                    </button>
+                </form>
+
+                <!-- Liens -->
+                <div class="links">
+                    <!--    Vous avez déjà un compte ? <a href="{% url 'connexion' %}">Se connecter</a>
+                </div>  -->
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Sélection du profil
+            function selectProfile(role) {
+                document.getElementById('id_role').value = role;
+
+                // Retirer la classe selected de toutes les cartes
+                document.querySelectorAll('.profile-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+
+                // Ajouter la classe selected à la carte cliquée
+                document.getElementById('card-' + role).classList.add('selected');
+            }
+
+            // Initialiser avec client sélectionné
+            document.addEventListener('DOMContentLoaded', function() {
+                selectProfile('client');
+
+                // Si le formulaire a été soumis avec erreur, pré-sélectionner le bon rôle
+                const roleValue = document.getElementById('id_role').value;
+                if (roleValue) {
+                    selectProfile(roleValue);
+                }
+            });
+
+            // Validation simple du formulaire
+            document.getElementById('inscriptionForm').addEventListener('submit', function(e) {
+                const password1 = document.getElementById('id_password1').value;
+                const password2 = document.getElementById('id_password2').value;
+                const telephone = document.getElementById('id_telephone').value;
+
+                // Vérifier que les mots de passe correspondent
+                if (password1 !== password2) {
+                    e.preventDefault();
+                    alert('Les mots de passe ne correspondent pas !');
+                    return false;
+                }
+
+                // Vérifier la longueur du mot de passe
+                if (password1.length < 8) {
+                    e.preventDefault();
+                    alert('Le mot de passe doit contenir au moins 8 caractères !');
+                    return false;
+                }
+
+                // Vérifier le téléphone (simplifié)
+                if (telephone.length < 8) {
+                    e.preventDefault();
+                    alert('Veuillez entrer un numéro de téléphone valide !');
+                    return false;
+                }
+
+                return true;
+            });
+        </script>
+</body>
+
+</html>

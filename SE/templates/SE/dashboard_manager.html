@@ -1,0 +1,985 @@
+<!-- templates/SE/dashboard_manager.html -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager - Tableau de bord</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #4a6491;
+        }
+        
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background: #4a6491;
+        }
+        
+        .sidebar .active {
+            background: #4a6491;
+        }
+        /* Main content */
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        /* Header */
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .user-info {
+            color: #666;
+        }
+        /* Stats cards */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        /* Sections */
+        
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Tables */
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        /* Buttons */
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4a6491;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        /* Forms */
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #2c3e50;
+        }
+        /* Grid */
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -10px;
+        }
+        
+        .col-md-6 {
+            flex: 0 0 50%;
+            padding: 10px;
+        }
+        
+        .col-md-4 {
+            flex: 0 0 33.333%;
+            padding: 10px;
+        }
+        /* Alerts */
+        
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        /* Badges */
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .badge-warning {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .badge-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .badge-info {
+            background: #3498db;
+            color: white;
+        }
+        /* Modal */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .close:hover {
+            color: #333;
+        }
+        /* Search */
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        /* Pagination */
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .page-link {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        
+        .page-link.active {
+            background: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .col-md-6,
+            .col-md-4 {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>🏢 Manager</h2>
+            <a href="#stats" class="active">📊 Tableau de bord</a>
+            <a href="#clients">👥 Clients</a>
+            <a href="#agents">🤝 Agents</a>
+            <a href="#bailleurs">👑 Bailleurs</a>
+            <a href="#proprietes">🏠 Propriétés</a>
+            <a href="#rdv">📅 Rendez-vous</a>
+            <a href="{% url 'accueil' %}">🏠 Accueil</a>
+            <a href="{% url 'deconnexion' %}" style="margin-top: 30px;">🚪 Déconnexion</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div>
+                    <h1>📊 Tableau de bord Manager</h1>
+                    <p>{{ mois_courant }}</p>
+                </div>
+                <div class="user-info">
+                    <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong><br>
+                    <span style="font-size: 12px;">Manager • {{ request.user.profil.telephone }}</span>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %} {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %} {% endif %}
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>👥 Clients</h3>
+                    <div class="stat-number">{{ total_clients }}</div>
+                    <div class="stat-label">+{{ inscriptions_aujourdhui }} aujourd'hui</div>
+                </div>
+                <div class="stat-card">
+                    <h3>🤝 Agents</h3>
+                    <div class="stat-number">{{ total_agents }}</div>
+                    <div class="stat-label">{{ agents_performance|length }} actifs</div>
+                </div>
+                <div class="stat-card">
+                    <h3>👑 Bailleurs</h3>
+                    <div class="stat-number">{{ total_bailleurs }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>🏠 Propriétés</h3>
+                    <div class="stat-number">{{ total_proprietes }}</div>
+                    <div class="stat-label">{{ proprietes_vente }} vente • {{ proprietes_location }} location</div>
+                </div>
+                <div class="stat-card">
+                    <h3>💰 Valeur totale</h3>
+                    <div class="stat-number">{{ valeur_totale|default:0 }} FCFA</div>
+                </div>
+                <div class="stat-card">
+                    <h3>📅 Rendez-vous</h3>
+                    <div class="stat-number">{{ total_rdv }}</div>
+                    <div class="stat-label">{{ rdv_en_attente }} en attente</div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="section">
+                <div class="section-title">
+                    <h3>⚡ Actions rapides</h3>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="openModal('ajouterUtilisateur')">➕ Ajouter utilisateur</button>
+                    <button class="btn btn-success" onclick="openModal('affecterClient')">🤝 Affecter client</button>
+                    <button class="btn btn-warning" onclick="openModal('reaffecterClient')">🔄 Réaffecter client</button>
+                </div>
+            </div>
+
+            <!-- Row: Performance + Clients sans agent -->
+            <div class="row">
+                <!-- Performance des agents -->
+                <div class="col-md-6">
+                    <div class="section">
+                        <div class="section-title">
+                            <h3>📈 Performance des agents</h3>
+                            <span class="badge badge-info">{{ agents_performance|length }} agents</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>Clients</th>
+                                        <th>Propriétés</th>
+                                        <th>RDV</th>
+                                        <th>Conversion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for agent in agents_performance|slice:":5" %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ agent.nom }}</strong><br>
+                                            <small style="color: #999;">{{ agent.telephone }}</small>
+                                        </td>
+                                        <td>{{ agent.clients }}</td>
+                                        <td>{{ agent.proprietes }}</td>
+                                        <td>{{ agent.rdv }}</td>
+                                        <td>
+                                            <span class="badge {% if agent.taux_conversion > 70 %}badge-success{% elif agent.taux_conversion > 40 %}badge-warning{% else %}badge-danger{% endif %}">
+                                                {{ agent.taux_conversion }}%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #999;">Aucun agent</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clients sans agent -->
+                <div class="col-md-6">
+                    <div class="section">
+                        <div class="section-title">
+                            <h3>⚠️ Clients sans agent</h3>
+                            <span class="badge badge-danger">{{ total_clients_sans_agent }}</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Téléphone</th>
+                                        <th>Inscription</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for client in clients_sans_agent %}
+                                    <tr>
+                                        <td>
+                                            {{ client.first_name }} {{ client.last_name }}<br>
+                                            <small style="color: #999;">{{ client.email }}</small>
+                                        </td>
+                                        <td>{{ client.profil.telephone|default:"-" }}</td>
+                                        <td>{{ client.date_joined|date:"d/m/Y" }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="affecterClient({{ client.id }})">
+                                                Affecter
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #999;">Tous les clients ont un agent</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dernières inscriptions -->
+            <div class="section">
+                <div class="section-title">
+                    <h3>🆕 Dernières inscriptions</h3>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Rôle</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in dernieres_inscriptions %}
+                            <tr>
+                                <td>
+                                    {{ user.first_name }} {{ user.last_name }}<br>
+                                    <small style="color: #999;">@{{ user.username }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge {% if user.profil.role == 'client' %}badge-info{% elif user.profil.role == 'agent' %}badge-success{% elif user.profil.role == 'bailleur' %}badge-warning{% else %}badge-primary{% endif %}">
+                                        {{ user.profil.role|default:"-" }}
+                                    </span>
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.profil.telephone|default:"-" }}</td>
+                                <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" onclick="modifierUtilisateur({{ user.id }})">✏️</button>
+                                    <button class="btn btn-sm btn-danger" onclick="supprimerUtilisateur({{ user.id }})">🗑️</button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #999;">Aucune inscription</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Derniers rendez-vous -->
+            <div class="section">
+                <div class="section-title">
+                    <h3>📅 Derniers rendez-vous</h3>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Propriété</th>
+                                <th>Date/Heure</th>
+                                <th>Lieu</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rdv in derniers_rdv %}
+                            <tr>
+                                <td>{{ rdv.client.first_name }} {{ rdv.client.last_name }}</td>
+                                <td>{{ rdv.propriete.type_bien }} - {{ rdv.propriete.prix }} FCFA</td>
+                                <td>{{ rdv.date|date:"d/m/Y" }} à {{ rdv.heure|time:"H:i" }}</td>
+                                <td>{{ rdv.lieu }}</td>
+                                <td>
+                                    <span class="badge {% if rdv.statut == 'confirme' %}badge-success{% elif rdv.statut == 'annule' %}badge-danger{% else %}badge-warning{% endif %}">
+                                        {{ rdv.statut }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #999;">Aucun rendez-vous</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Liste des utilisateurs avec filtres -->
+            <div class="section">
+                <div class="section-title">
+                    <h3>👥 Gestion des utilisateurs</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <select onchange="window.location.href='?type='+this.value" style="padding: 6px; border-radius: 4px;">
+                            <option value="tous" {% if filtre_type == 'tous' %}selected{% endif %}>Tous</option>
+                            <option value="clients" {% if filtre_type == 'clients' %}selected{% endif %}>Clients</option>
+                            <option value="agents" {% if filtre_type == 'agents' %}selected{% endif %}>Agents</option>
+                            <option value="bailleurs" {% if filtre_type == 'bailleurs' %}selected{% endif %}>Bailleurs</option>
+                            <option value="managers" {% if filtre_type == 'managers' %}selected{% endif %}>Managers</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Recherche -->
+                <form method="get" class="search-box">
+                    <input type="text" name="recherche" placeholder="Rechercher un utilisateur..." value="{{ recherche }}">
+                    <input type="hidden" name="type" value="{{ filtre_type }}">
+                    <button type="submit" class="btn btn-primary">🔍 Rechercher</button> {% if recherche %}
+                    <a href="?type={{ filtre_type }}" class="btn">✖ Réinitialiser</a> {% endif %}
+                </form>
+
+                <!-- Tableau des utilisateurs -->
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Nom d'utilisateur</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Rôle</th>
+                                <th>Date inscription</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in utilisateurs %}
+                            <tr>
+                                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                <td>@{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.profil.telephone|default:"-" }}</td>
+                                <td>
+                                    <span class="badge {% if user.profil.role == 'client' %}badge-info{% elif user.profil.role == 'agent' %}badge-success{% elif user.profil.role == 'bailleur' %}badge-warning{% else %}badge-primary{% endif %}">
+                                        {{ user.profil.role|default:"-" }}
+                                    </span>
+                                </td>
+                                <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" onclick="modifierUtilisateur({{ user.id }})">✏️</button>
+                                    <button class="btn btn-sm btn-danger" onclick="supprimerUtilisateur({{ user.id }})">🗑️</button> {% if user.profil.role == 'client' %}
+                                    <button class="btn btn-sm btn-primary" onclick="affecterClient({{ user.id }})">🤝</button> {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #999;">Aucun utilisateur trouvé</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if pages_total > 1 %}
+                <div class="pagination">
+                    {% if page_actuelle > 1 %}
+                    <a href="?page={{ page_actuelle|add:'-1' }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link">←</a> {% endif %} {% for i in pages_total|make_list %} {% if forloop.counter
+                    <=5 %} <a href="?page={{ forloop.counter }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link {% if page_actuelle == forloop.counter %}active{% endif %}">
+                        {{ forloop.counter }}
+                        </a>
+                        {% endif %} {% endfor %} {% if page_actuelle
+                        < pages_total %} <a href="?page={{ page_actuelle|add:'1' }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link">→</a>
+                            {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AJOUTER UTILISATEUR -->
+    <div id="modalAjouterUtilisateur" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Ajouter un utilisateur</h2>
+                <span class="close" onclick="closeModal('ajouterUtilisateur')">&times;</span>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="ajouter_utilisateur">
+
+                <div class="form-group">
+                    <label>Rôle</label>
+                    <select name="role" class="form-control" required>
+                        <option value="">-- Sélectionner --</option>
+                        <option value="client">👤 Client</option>
+                        <option value="agent">🤝 Agent</option>
+                        <option value="bailleur">👑 Bailleur</option>
+                        <option value="manager">👨‍💼 Manager</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" name="telephone" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mot de passe (défaut: Passer@123)</label>
+                    <input type="password" name="password" class="form-control" value="Passer@123">
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%;">✅ Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL AFFECTER CLIENT -->
+    <div id="modalAffecterClient" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🤝 Affecter un client à un agent</h2>
+                <span class="close" onclick="closeModal('affecterClient')">&times;</span>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="affecter_client">
+
+                <div class="form-group">
+                    <label>Client</label>
+                    <select name="client_id" class="form-control" required>
+                        <option value="">-- Sélectionner --</option>
+                        {% for client in liste_clients %}
+                        <option value="{{ client.id }}">{{ client.first_name }} {{ client.last_name }} ({{ client.email }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Agent</label>
+                    <select name="agent_id" class="form-control" required>
+                        <option value="">-- Sélectionner --</option>
+                        {% for agent in liste_agents %}
+                        <option value="{{ agent.id }}">{{ agent.first_name }} {{ agent.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%;">✅ Affecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL RÉAFFECTER CLIENT -->
+    <div id="modalReaffecterClient" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔄 Réaffecter un client</h2>
+                <span class="close" onclick="closeModal('reaffecterClient')">&times;</span>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reaffecter_client">
+
+                <div class="form-group">
+                    <label>Client</label>
+                    <select name="client_id" class="form-control" required>
+                        <option value="">-- Sélectionner --</option>
+                        {% for client in liste_clients %}
+                        <option value="{{ client.id }}">{{ client.first_name }} {{ client.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nouvel agent</label>
+                    <select name="nouvel_agent_id" class="form-control" required>
+                        <option value="">-- Sélectionner --</option>
+                        {% for agent in liste_agents %}
+                        <option value="{{ agent.id }}">{{ agent.first_name }} {{ agent.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-warning" style="width: 100%;">🔄 Réaffecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL SUPPRIMER -->
+    <div id="modalSupprimer" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🗑️ Confirmer la suppression</h2>
+                <span class="close" onclick="closeModal('supprimer')">&times;</span>
+            </div>
+            <p style="margin-bottom: 20px;">Êtes-vous sûr de vouloir supprimer cet utilisateur ?</p>
+            <form method="post" id="formSupprimer">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="supprimer_utilisateur">
+                <input type="hidden" name="user_id" id="supprimer_user_id">
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-danger" style="flex: 1;">🗑️ Supprimer</button>
+                    <button type="button" class="btn" onclick="closeModal('supprimer')" style="flex: 1;">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL MODIFIER -->
+    <div id="modalModifier" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Modifier utilisateur</h2>
+                <span class="close" onclick="closeModal('modifier')">&times;</span>
+            </div>
+            <form method="post" id="formModifier">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="modifier_utilisateur">
+                <input type="hidden" name="user_id" id="modifier_user_id">
+
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" id="modifier_nom" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" id="modifier_prenom" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" id="modifier_email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" name="telephone" id="modifier_telephone" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-warning" style="width: 100%;">✏️ Modifier</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Ouvrir modal
+        function openModal(type) {
+            document.getElementById('modal' + type.charAt(0).toUpperCase() + type.slice(1)).style.display = 'block';
+        }
+
+        // Fermer modal
+        function closeModal(type) {
+            const modalId = 'modal' + type.charAt(0).toUpperCase() + type.slice(1);
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Supprimer utilisateur
+        function supprimerUtilisateur(userId) {
+            document.getElementById('supprimer_user_id').value = userId;
+            openModal('supprimer');
+        }
+
+        // Modifier utilisateur
+        function modifierUtilisateur(userId) {
+            // Récupérer les données de l'utilisateur
+            fetch(`/manager/api/?action=get_user&user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modifier_user_id').value = userId;
+                    document.getElementById('modifier_nom').value = data.last_name;
+                    document.getElementById('modifier_prenom').value = data.first_name;
+                    document.getElementById('modifier_email').value = data.email;
+                    document.getElementById('modifier_telephone').value = data.telephone;
+                    openModal('modifier');
+                })
+                .catch(error => {
+                    alert('Erreur lors du chargement des données');
+                });
+        }
+
+        // Affecter client
+        function affecterClient(clientId) {
+            // Pré-remplir le formulaire d'affectation
+            const modal = document.getElementById('modalAffecterClient');
+            const select = modal.querySelector('select[name="client_id"]');
+
+            for (let option of select.options) {
+                if (option.value == clientId) {
+                    option.selected = true;
+                    break;
+                }
+            }
+            openModal('affecterClient');
+        }
+
+        // Fermer les modals en cliquant dehors
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Rafraîchir les stats
+        function refreshStats() {
+            location.reload();
+        }
+
+        // Rafraîchir toutes les 5 minutes
+        setInterval(refreshStats, 300000);
+    </script>
+</body>
+
+</html>
