@@ -160,15 +160,15 @@ def inscription(request):
         try:
             profil = request.user.profil
             if profil.role == 'bailleur':
-                return redirect('SE/dashboard_bailleur')
+                return redirect('/SE/dashboard_bailleur/')
             elif profil.role == 'agent':
-                return redirect('SE/dashboard_agent')
+                return redirect('/SE/dashboard_agent/')
             elif profil.role == 'manager':
-                return redirect('SE/dashboard_manager')
+                return redirect('/SE/dashboard_manager/')
             else:
-                return redirect('SE/dashboard_client')
+                return redirect('/SE/dashboard_client/')
         except:
-            return redirect('SE/accueil')
+            return redirect('/SE/accueil/')
     
     if request.method == 'POST':
         form = InscriptionForm(request.POST)
@@ -191,13 +191,13 @@ def inscription(request):
                 # Rediriger vers le dashboard selon le rôle
                 role = form.cleaned_data['role']
                 if role == 'bailleur':
-                    return redirect('SE/dashboard_bailleur')
+                    return redirect('/SE/dashboard_bailleur/')
                 elif role == 'agent':
-                    return redirect('SE/dashboard_agent')
+                    return redirect('/SE/dashboard_agent/')
                 elif role == 'manager':
-                    return redirect('SE/dashboard_manager')
+                    return redirect('/SE/dashboard_manager/')
                 else:  # client
-                    return redirect('SE/dashboard_client')
+                    return redirect('/SE/client/')
                     
             except Exception as e:
                 messages.error(request, f"❌ Une erreur est survenue : {str(e)}")
@@ -228,12 +228,99 @@ def agent(request):
     
     return render(request, 'SE/dashboard_agent.html')
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.paginator import Paginator
+from .models import Propriete, Favori, Profil
 
-
+@login_required
 def client(request):
+    """
+    Dashboard client - Gestion complète des favoris
+    """
+    # VÉRIFICATION DU RÔLE CLIENT
+    try:
+        profil = request.user.profil
+        if profil.role != 'client':
+            messages.error(request, "⛔ Accès non autorisé - Espace réservé aux clients")
+            return redirect('SE:connexion')
+    except Profil.DoesNotExist:
+        messages.error(request, "❌ Profil utilisateur introuvable")
+        return redirect('SE:connexion')
     
+    # TRAITEMENT DES ACTIONS POST (Ajout/Suppression)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        # AJOUTER AUX FAVORIS
+        if action == 'ajouter':
+            propriete_id = request.POST.get('propriete_id')
+            propriete = get_object_or_404(Propriete, id=propriete_id)
+            
+            favori_existant = Favori.objects.filter(
+                client=request.user,
+                propriete=propriete
+            ).first()
+            
+            if favori_existant:
+                messages.info(request, f"ℹ️ {propriete} est déjà dans vos favoris")
+            else:
+                Favori.objects.create(
+                    client=request.user,
+                    propriete=propriete
+                )
+                messages.success(request, f"✅ {propriete} ajouté à vos favoris")
+        
+        # SUPPRIMER DES FAVORIS
+        elif action == 'supprimer':
+            favori_id = request.POST.get('favori_id')
+            favori = get_object_or_404(
+                Favori, 
+                id=favori_id, 
+                client=request.user
+            )
+            propriete = favori.propriete
+            favori.delete()
+            messages.success(request, f"🗑️ {propriete} retiré de vos favoris")
+        
+        return redirect('SE:client')
     
-    return render(request, 'SE/dashboard_client.html')
+    # AFFICHAGE DES FAVORIS (GET)
+    # ✅ 'date_ajout' EXISTE dans Favori !
+    favoris_list = Favori.objects.filter(
+        client=request.user
+    ).select_related('propriete').order_by('-date_ajout')
+    
+    # Pagination
+    paginator = Paginator(favoris_list, 12)
+    page = request.GET.get('page')
+    favoris = paginator.get_page(page)
+    
+    # Propriétés disponibles pour ajout (hors déjà favoris)
+    favoris_ids = favoris_list.values_list('propriete_id', flat=True)
+    
+    # ✅ Pas de 'disponible' donc on prend toutes les propriétés
+    # ✅ Pas de 'date_creation' donc on trie par 'id' ou 'prix'
+    proprietes_disponibles = Propriete.objects.exclude(
+        id__in=favoris_ids
+    ).order_by('-id')[:20]  # Trie par id (plus récent d'abord)
+    
+    # Statistiques
+    total_favoris = favoris_list.count()
+    total_proprietes = Propriete.objects.all().count()  # ✅ Toutes les propriétés
+    
+    context = {
+        'favoris': favoris,
+        'total_favoris': total_favoris,
+        'total_proprietes': total_proprietes,
+        'client_nom': request.user.get_full_name() or request.user.username,
+        'proprietes_disponibles': proprietes_disponibles,
+        'favoris_ids': list(favoris_ids),
+        'page_title': 'Mes propriétés favorites',
+    }
+    
+    return render(request, 'SE/dashboard_client.html', context)
 def bailleur(request):
     
     

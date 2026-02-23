@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 
 from django.db import models
@@ -79,7 +80,7 @@ class Propriete(models.Model):
 class Favori(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
     propriete = models.ForeignKey(Propriete, on_delete=models.CASCADE)
-
+    date_ajout = models.DateTimeField(auto_now_add=True)  # ← AJOUTE CECI
     class Meta:
         unique_together = ('client', 'propriete')
 
