@@ -30,20 +30,49 @@ from .models import Profil, Propriete, Favori, RendezVous, Categorie
 import json
 
 def accueil(request):
+    """
+    Page d'accueil avec liste des propriétés
+    """
     # Récupérer toutes les propriétés
     proprietes = Propriete.objects.all().order_by('-id')
     
-    # Récupérer les catégories pour un filtre éventuel
+    # Récupérer les catégories
     categories = Categorie.objects.all()
     
-    # Récupérer les dernières propriétés (optionnel)
+    # Récupérer les 6 dernières propriétés pour la section "Nos propriétés"
     dernieres_proprietes = Propriete.objects.all().order_by('-id')[:6]
-                                                                             
+    
+    # Statistiques
+    total_proprietes = proprietes.count()
+    total_bailleurs = User.objects.filter(proprietes_bailleur__isnull=False).distinct().count()
+    total_clients = Profil.objects.filter(role='client').count()
+    
+    # Choices pour les filtres (directement depuis le modèle)
+    type_choices = Propriete.TYPE_CHOICES
+    option_choices = Propriete.OPTION_CHOICES
+    
+    # Filtres (si présents dans GET)
+    type_filtre = request.GET.get('type')
+    option_filtre = request.GET.get('option')
+    prix_max = request.GET.get('prix_max')
+    
+    if type_filtre:
+        proprietes = proprietes.filter(type_bien=type_filtre)
+    if option_filtre:
+        proprietes = proprietes.filter(option=option_filtre)
+    if prix_max:
+        proprietes = proprietes.filter(prix__lte=prix_max)
+    
     context = {
         'proprietes': proprietes,
         'categories': categories,
         'dernieres_proprietes': dernieres_proprietes,
-        }
+        'total_proprietes': total_proprietes,
+        'total_bailleurs': total_bailleurs,
+        'total_clients': total_clients,
+        'type_choices': type_choices,
+        'option_choices': option_choices,
+    }
 
     return render(request, 'SE/accueil.html', context)
 
@@ -62,18 +91,18 @@ def connexion(request):
         try:
             role = request.user.profil.role
             if role == 'bailleur':
-                return redirect('SE:bailleur')  # ← SANS 'SE/'
+                return redirect('bailleur')  # ← CORRIGÉ (sans SE:)
             elif role == 'agent':
-                return redirect('SE:agent')     # ← SANS 'SE/'
+                return redirect('agent')     # ← CORRIGÉ
             elif role == 'manager':
-                return redirect('SE:manager')   # ← SANS 'SE/'
+                return redirect('dashboard_manager')   # ← CORRIGÉ
             else:
-                return redirect('SE:client')    # ← SANS 'SE/'
-        except Profil.DoesNotExist:  # ← Attrape SEULEMENT l'absence de profil
-            return redirect('SE:client')
-        except Exception as e:       # ← Attrape les autres erreurs mais les LOGUE
+                return redirect('client')    # ← CORRIGÉ
+        except Profil.DoesNotExist:
+            return redirect('client')
+        except Exception as e:
             print(f"⚠️ Erreur de redirection: {e}")
-            return redirect('SE:client')
+            return redirect('client')
     
     if request.method == 'POST':
         form = ConnexionForm(request, data=request.POST)
@@ -83,35 +112,31 @@ def connexion(request):
             password = form.cleaned_data.get('password')
             remember_me = form.cleaned_data.get('remember_me', False)
             
-            # Authentifier l'utilisateur
             user = authenticate(username=username, password=password)
             
             if user is not None:
-                # Connecter l'utilisateur
                 login(request, user)
                 
-                # Gérer "Se souvenir de moi"
                 if not remember_me:
                     request.session.set_expiry(0)
                 
                 messages.success(request, f"✅ Content de vous revoir {user.first_name} !")
                 
-                # Rediriger selon le rôle
                 try:
                     role = user.profil.role
                     if role == 'bailleur':
-                        return redirect('dashboard_bailleur')  # ← CORRIGÉ
+                        return redirect('bailleur')  # ← CORRIGÉ
                     elif role == 'agent':
-                        return redirect('dashboard_agent')     # ← CORRIGÉ
+                        return redirect('agent')     # ← CORRIGÉ
                     elif role == 'manager':
                         return redirect('dashboard_manager')   # ← CORRIGÉ
                     else:
-                        return redirect('dashboard_client')    # ← CORRIGÉ
-                except Profil.DoesNotExist:  # ← Spécifique
-                    return redirect('dashboard_client')
-                except Exception as e:       # ← Avec log
+                        return redirect('client')    # ← CORRIGÉ
+                except Profil.DoesNotExist:
+                    return redirect('client')
+                except Exception as e:
                     print(f"⚠️ Erreur de redirection: {e}")
-                    return redirect('dashboard_client')
+                    return redirect('client')
         else:
             messages.error(request, "❌ Nom d'utilisateur ou mot de passe incorrect.")
     else:
@@ -344,7 +369,7 @@ def propos(request):
 
 
 @login_required
-def dashboard_bailleur(request):
+def bailleur(request):
     """
     Dashboard bailleur unique - Gestion complète des propriétés
     """

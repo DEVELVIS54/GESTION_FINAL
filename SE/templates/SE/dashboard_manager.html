@@ -6,132 +6,278 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager - Tableau de bord</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+        /* Style général (identique à l'accueil) */
         
         body {
-            background: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        /* Navbar */
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
-        .container {
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        /* Layout principal */
+        
+        .dashboard-container {
             display: flex;
-            min-height: 100vh;
+            min-height: calc(100vh - 56px);
         }
         /* Sidebar */
         
         .sidebar {
-            width: 250px;
-            background: #2c3e50;
+            width: 280px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
             color: white;
-            padding: 20px;
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
         
         .sidebar h2 {
+            font-size: 1.5rem;
             margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #4a6491;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
         }
         
-        .sidebar a {
+        .sidebar h2 i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
             display: block;
             color: white;
             text-decoration: none;
-            padding: 12px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            transition: background 0.3s;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            opacity: 0.8;
         }
         
-        .sidebar a:hover {
-            background: #4a6491;
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 1;
+            transform: translateX(5px);
         }
         
-        .sidebar .active {
-            background: #4a6491;
+        .sidebar-menu a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu .logout {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
         }
         /* Main content */
         
         .main-content {
             flex: 1;
-            padding: 20px;
+            padding: 30px;
+            background: #f8f9fa;
         }
         /* Header */
         
-        .header {
+        .page-header {
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .header h1 {
+        .page-header h1 {
+            font-size: 1.8rem;
             color: #2c3e50;
-            font-size: 24px;
+            margin: 0;
+        }
+        
+        .page-header h1 i {
+            margin-right: 15px;
+            color: #3498db;
         }
         
         .user-info {
-            color: #666;
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .user-role {
+            font-size: 0.9rem;
+            color: #7f8c8d;
         }
         /* Stats cards */
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
         
         .stat-card {
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
         }
         
-        .stat-card h3 {
-            color: #666;
-            font-size: 14px;
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .stat-title {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 10px;
         }
         
         .stat-number {
-            font-size: 28px;
+            font-size: 2rem;
             font-weight: bold;
             color: #2c3e50;
+            margin-bottom: 5px;
         }
         
         .stat-label {
-            color: #999;
-            font-size: 12px;
-            margin-top: 5px;
+            color: #95a5a6;
+            font-size: 0.85rem;
         }
         /* Sections */
         
         .section {
             background: white;
-            padding: 20px;
-            border-radius: 8px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         
-        .section-title {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+        .section-header {
+            padding: 20px 25px;
             border-bottom: 2px solid #f0f0f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        .section-header h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        
+        .section-header h3 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .section-body {
+            padding: 20px 25px;
+        }
+        /* Actions rapides */
+        
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .action-btn.success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .action-btn.warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
         }
         /* Tables */
         
@@ -146,150 +292,183 @@
         
         th {
             background: #f8f9fa;
-            padding: 12px;
+            padding: 15px;
             text-align: left;
             font-weight: 600;
             color: #2c3e50;
-            border-bottom: 2px solid #dee2e6;
+            border-bottom: 2px solid #e9ecef;
         }
         
         td {
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
         }
         
         tr:hover {
             background: #f8f9fa;
         }
-        /* Buttons */
-        
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: background 0.3s;
-        }
-        
-        .btn-primary {
-            background: #2c3e50;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #4a6491;
-        }
-        
-        .btn-success {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .btn-sm {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-        /* Forms */
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #2c3e50;
-        }
-        /* Grid */
-        
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin: -10px;
-        }
-        
-        .col-md-6 {
-            flex: 0 0 50%;
-            padding: 10px;
-        }
-        
-        .col-md-4 {
-            flex: 0 0 33.333%;
-            padding: 10px;
-        }
-        /* Alerts */
-        
-        .alert {
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
         /* Badges */
         
         .badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
         
         .badge-success {
-            background: #27ae60;
+            background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
         }
         
         .badge-warning {
-            background: #f39c12;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
             color: white;
         }
         
         .badge-danger {
-            background: #e74c3c;
+            background: linear-gradient(135deg, #dc3545, #c82333);
             color: white;
         }
         
         .badge-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+        
+        .badge-primary {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+        }
+        /* Boutons */
+        
+        .btn-icon {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+        }
+        
+        .btn-icon.edit {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-icon.edit:hover {
+            background: #e67e22;
+            transform: scale(1.1);
+        }
+        
+        .btn-icon.delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-icon.delete:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+        
+        .btn-icon.assign {
             background: #3498db;
             color: white;
+        }
+        
+        .btn-icon.assign:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        /* Search box */
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .search-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .reset-btn {
+            padding: 12px 25px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .reset-btn:hover {
+            background: #7f8c8d;
+        }
+        /* Pagination */
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-link {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .page-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+        
+        .page-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
         }
         /* Modal */
         
@@ -302,6 +481,7 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
@@ -310,250 +490,420 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 30px;
-            border-radius: 8px;
+            border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         
         .modal-header {
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
         
-        .close {
-            font-size: 24px;
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .modal-header h2 i {
+            margin-right: 10px;
+        }
+        
+        .modal-header .close {
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #999;
+            transition: all 0.3s;
         }
         
-        .close:hover {
-            color: #333;
+        .modal-header .close:hover {
+            transform: scale(1.2);
         }
-        /* Search */
         
-        .search-box {
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 2px solid #e9ecef;
             display: flex;
             gap: 10px;
+            justify-content: flex-end;
+        }
+        /* Formulaires */
+        
+        .form-group {
             margin-bottom: 20px;
         }
         
-        .search-box input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        /* Pagination */
-        
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .page-link {
-            padding: 8px 12px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: #2c3e50;
-            text-decoration: none;
         }
         
-        .page-link.active {
-            background: #2c3e50;
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        select.form-control {
+            cursor: pointer;
+        }
+        /* Filter select */
+        
+        .filter-select {
+            padding: 8px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        /* Footer */
+        
+        .footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 50px 0 20px;
+            margin-left: 280px;
+        }
+        
+        .footer-title {
             color: white;
-            border-color: #2c3e50;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
         }
         /* Responsive */
         
         @media (max-width: 768px) {
-            .container {
+            .dashboard-container {
                 flex-direction: column;
             }
             .sidebar {
                 width: 100%;
             }
-            .col-md-6,
-            .col-md-4 {
-                flex: 0 0 100%;
+            .footer {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accueil' %}">
+                <i class="fas fa-home me-2"></i>Agence Immobilière
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accueil' %}">
+                            <i class="fas fa-home me-1"></i>Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'propos' %}">
+                            <i class="fas fa-info-circle me-1"></i>À propos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'propierte' %}">
+                            <i class="fas fa-building me-1"></i>Propriétés
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'dashboard_manager' %}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'connexion' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <h2>🏢 Manager</h2>
-            <a href="#stats" class="active">📊 Tableau de bord</a>
-            <a href="#clients">👥 Clients</a>
-            <a href="#agents">🤝 Agents</a>
-            <a href="#bailleurs">👑 Bailleurs</a>
-            <a href="#proprietes">🏠 Propriétés</a>
-            <a href="#rdv">📅 Rendez-vous</a>
-            <a href="{% url 'accueil' %}">🏠 Accueil</a>
-            <a href="{% url 'deconnexion' %}" style="margin-top: 30px;">🚪 Déconnexion</a>
+            <h2>
+                <i class="fas fa-tachometer-alt"></i> Menu Manager
+            </h2>
+
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="fas fa-chart-line"></i> Tableau de bord</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> Clients</a></li>
+                <li><a href="#"><i class="fas fa-user-tie"></i> Agents</a></li>
+                <li><a href="#"><i class="fas fa-user-tag"></i> Bailleurs</a></li>
+                <li><a href="#"><i class="fas fa-building"></i> Propriétés</a></li>
+                <li><a href="#"><i class="fas fa-calendar-check"></i> Rendez-vous</a></li>
+                <li class="logout"><a href="{% url 'connexion' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+            </ul>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
-            <div class="header">
+            <!-- Page Header -->
+            <div class="page-header">
                 <div>
-                    <h1>📊 Tableau de bord Manager</h1>
-                    <p>{{ mois_courant }}</p>
+                    <h1>
+                        <i class="fas fa-chart-line"></i> Tableau de bord Manager
+                    </h1>
+                    <p class="text-muted mb-0">{{ mois_courant|default:"Mars 2026" }}</p>
                 </div>
                 <div class="user-info">
-                    <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong><br>
-                    <span style="font-size: 12px;">Manager • {{ request.user.profil.telephone }}</span>
+                    <div class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+                    <div class="user-role">
+                        <i class="fas fa-user-tie me-1"></i> Manager • {{ request.user.profil.telephone|default:"-" }}
+                    </div>
                 </div>
             </div>
 
-            <!-- Messages -->
+            <!-- Messages Flash -->
             {% if messages %} {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
-                {{ message }}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show">
+                <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %} me-2"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             {% endfor %} {% endif %}
 
             <!-- Stats Cards -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>👥 Clients</h3>
-                    <div class="stat-number">{{ total_clients }}</div>
-                    <div class="stat-label">+{{ inscriptions_aujourdhui }} aujourd'hui</div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-title">Clients</div>
+                    <div class="stat-number">{{ total_clients|default:"0" }}</div>
+                    <div class="stat-label">
+                        <i class="fas fa-arrow-up text-success me-1"></i> +{{ inscriptions_aujourdhui|default:"0" }} aujourd'hui
+                    </div>
                 </div>
+
                 <div class="stat-card">
-                    <h3>🤝 Agents</h3>
-                    <div class="stat-number">{{ total_agents }}</div>
-                    <div class="stat-label">{{ agents_performance|length }} actifs</div>
+                    <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                    <div class="stat-title">Agents</div>
+                    <div class="stat-number">{{ total_agents|default:"0" }}</div>
+                    <div class="stat-label">{{ agents_performance|length|default:"0" }} actifs</div>
                 </div>
+
                 <div class="stat-card">
-                    <h3>👑 Bailleurs</h3>
-                    <div class="stat-number">{{ total_bailleurs }}</div>
+                    <div class="stat-icon"><i class="fas fa-user-tag"></i></div>
+                    <div class="stat-title">Bailleurs</div>
+                    <div class="stat-number">{{ total_bailleurs|default:"0" }}</div>
                 </div>
+
                 <div class="stat-card">
-                    <h3>🏠 Propriétés</h3>
-                    <div class="stat-number">{{ total_proprietes }}</div>
-                    <div class="stat-label">{{ proprietes_vente }} vente • {{ proprietes_location }} location</div>
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
+                    <div class="stat-title">Propriétés</div>
+                    <div class="stat-number">{{ total_proprietes|default:"0" }}</div>
+                    <div class="stat-label">
+                        {{ proprietes_vente|default:"0" }} vente • {{ proprietes_location|default:"0" }} location
+                    </div>
                 </div>
+
                 <div class="stat-card">
-                    <h3>💰 Valeur totale</h3>
-                    <div class="stat-number">{{ valeur_totale|default:0 }} FCFA</div>
+                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                    <div class="stat-title">Valeur totale</div>
+                    <div class="stat-number">{{ valeur_totale|default:"0"|floatformat:0 }} FCFA</div>
                 </div>
+
                 <div class="stat-card">
-                    <h3>📅 Rendez-vous</h3>
-                    <div class="stat-number">{{ total_rdv }}</div>
-                    <div class="stat-label">{{ rdv_en_attente }} en attente</div>
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-title">Rendez-vous</div>
+                    <div class="stat-number">{{ total_rdv|default:"0" }}</div>
+                    <div class="stat-label">{{ rdv_en_attente|default:"0" }} en attente</div>
                 </div>
             </div>
 
             <!-- Actions rapides -->
             <div class="section">
-                <div class="section-title">
-                    <h3>⚡ Actions rapides</h3>
+                <div class="section-header">
+                    <h3><i class="fas fa-bolt"></i> Actions rapides</h3>
                 </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="openModal('ajouterUtilisateur')">➕ Ajouter utilisateur</button>
-                    <button class="btn btn-success" onclick="openModal('affecterClient')">🤝 Affecter client</button>
-                    <button class="btn btn-warning" onclick="openModal('reaffecterClient')">🔄 Réaffecter client</button>
+                <div class="section-body">
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="openModal('ajouterUtilisateur')">
+                            <i class="fas fa-user-plus"></i>
+                            Ajouter utilisateur
+                        </button>
+                        <button class="action-btn success" onclick="openModal('affecterClient')">
+                            <i class="fas fa-handshake"></i>
+                            Affecter client
+                        </button>
+                        <button class="action-btn warning" onclick="openModal('reaffecterClient')">
+                            <i class="fas fa-sync-alt"></i>
+                            Réaffecter client
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Row: Performance + Clients sans agent -->
+            <!-- Performance des agents & Clients sans agent -->
             <div class="row">
-                <!-- Performance des agents -->
                 <div class="col-md-6">
                     <div class="section">
-                        <div class="section-title">
-                            <h3>📈 Performance des agents</h3>
-                            <span class="badge badge-info">{{ agents_performance|length }} agents</span>
+                        <div class="section-header">
+                            <h3><i class="fas fa-chart-bar"></i> Performance des agents</h3>
+                            <span class="badge badge-info">{{ agents_performance|length|default:"0" }} agents</span>
                         </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Agent</th>
-                                        <th>Clients</th>
-                                        <th>Propriétés</th>
-                                        <th>RDV</th>
-                                        <th>Conversion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for agent in agents_performance|slice:":5" %}
-                                    <tr>
-                                        <td>
-                                            <strong>{{ agent.nom }}</strong><br>
-                                            <small style="color: #999;">{{ agent.telephone }}</small>
-                                        </td>
-                                        <td>{{ agent.clients }}</td>
-                                        <td>{{ agent.proprietes }}</td>
-                                        <td>{{ agent.rdv }}</td>
-                                        <td>
-                                            <span class="badge {% if agent.taux_conversion > 70 %}badge-success{% elif agent.taux_conversion > 40 %}badge-warning{% else %}badge-danger{% endif %}">
-                                                {{ agent.taux_conversion }}%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="5" style="text-align: center; color: #999;">Aucun agent</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Agent</th>
+                                            <th>Clients</th>
+                                            <th>Propriétés</th>
+                                            <th>RDV</th>
+                                            <th>Conversion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for agent in agents_performance|slice:":5" %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ agent.nom }}</strong><br>
+                                                <small class="text-muted">{{ agent.telephone }}</small>
+                                            </td>
+                                            <td>{{ agent.clients }}</td>
+                                            <td>{{ agent.proprietes }}</td>
+                                            <td>{{ agent.rdv }}</td>
+                                            <td>
+                                                <span class="badge {% if agent.taux_conversion > 70 %}badge-success{% elif agent.taux_conversion > 40 %}badge-warning{% else %}badge-danger{% endif %}">
+                                                    {{ agent.taux_conversion }}%
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">Aucun agent</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Clients sans agent -->
                 <div class="col-md-6">
                     <div class="section">
-                        <div class="section-title">
-                            <h3>⚠️ Clients sans agent</h3>
-                            <span class="badge badge-danger">{{ total_clients_sans_agent }}</span>
+                        <div class="section-header">
+                            <h3><i class="fas fa-exclamation-triangle text-warning"></i> Clients sans agent</h3>
+                            <span class="badge badge-danger">{{ total_clients_sans_agent|default:"0" }}</span>
                         </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Client</th>
-                                        <th>Téléphone</th>
-                                        <th>Inscription</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for client in clients_sans_agent %}
-                                    <tr>
-                                        <td>
-                                            {{ client.first_name }} {{ client.last_name }}<br>
-                                            <small style="color: #999;">{{ client.email }}</small>
-                                        </td>
-                                        <td>{{ client.profil.telephone|default:"-" }}</td>
-                                        <td>{{ client.date_joined|date:"d/m/Y" }}</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="affecterClient({{ client.id }})">
-                                                Affecter
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="4" style="text-align: center; color: #999;">Tous les clients ont un agent</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Téléphone</th>
+                                            <th>Inscription</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for client in clients_sans_agent %}
+                                        <tr>
+                                            <td>
+                                                {{ client.first_name }} {{ client.last_name }}<br>
+                                                <small class="text-muted">{{ client.email }}</small>
+                                            </td>
+                                            <td>{{ client.profil.telephone|default:"-" }}</td>
+                                            <td>{{ client.date_joined|date:"d/m/Y" }}</td>
+                                            <td>
+                                                <button class="btn-icon assign" onclick="affecterClient({{ client.id }})" title="Affecter">
+                                                    <i class="fas fa-handshake"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">Tous les clients ont un agent</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -561,96 +911,104 @@
 
             <!-- Dernières inscriptions -->
             <div class="section">
-                <div class="section-title">
-                    <h3>🆕 Dernières inscriptions</h3>
+                <div class="section-header">
+                    <h3><i class="fas fa-user-plus"></i> Dernières inscriptions</h3>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Utilisateur</th>
-                                <th>Rôle</th>
-                                <th>Email</th>
-                                <th>Téléphone</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in dernieres_inscriptions %}
-                            <tr>
-                                <td>
-                                    {{ user.first_name }} {{ user.last_name }}<br>
-                                    <small style="color: #999;">@{{ user.username }}</small>
-                                </td>
-                                <td>
-                                    <span class="badge {% if user.profil.role == 'client' %}badge-info{% elif user.profil.role == 'agent' %}badge-success{% elif user.profil.role == 'bailleur' %}badge-warning{% else %}badge-primary{% endif %}">
-                                        {{ user.profil.role|default:"-" }}
-                                    </span>
-                                </td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.profil.telephone|default:"-" }}</td>
-                                <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning" onclick="modifierUtilisateur({{ user.id }})">✏️</button>
-                                    <button class="btn btn-sm btn-danger" onclick="supprimerUtilisateur({{ user.id }})">🗑️</button>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: #999;">Aucune inscription</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="section-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Rôle</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in dernieres_inscriptions %}
+                                <tr>
+                                    <td>
+                                        {{ user.first_name }} {{ user.last_name }}<br>
+                                        <small class="text-muted">@{{ user.username }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if user.profil.role == 'client' %}badge-info{% elif user.profil.role == 'agent' %}badge-success{% elif user.profil.role == 'bailleur' %}badge-warning{% else %}badge-primary{% endif %}">
+                                            {{ user.profil.role|default:"-" }}
+                                        </span>
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.profil.telephone|default:"-" }}</td>
+                                    <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="modifierUtilisateur({{ user.id }})" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon delete" onclick="supprimerUtilisateur({{ user.id }})" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Aucune inscription</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- Derniers rendez-vous -->
             <div class="section">
-                <div class="section-title">
-                    <h3>📅 Derniers rendez-vous</h3>
+                <div class="section-header">
+                    <h3><i class="fas fa-calendar-check"></i> Derniers rendez-vous</h3>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th>Propriété</th>
-                                <th>Date/Heure</th>
-                                <th>Lieu</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for rdv in derniers_rdv %}
-                            <tr>
-                                <td>{{ rdv.client.first_name }} {{ rdv.client.last_name }}</td>
-                                <td>{{ rdv.propriete.type_bien }} - {{ rdv.propriete.prix }} FCFA</td>
-                                <td>{{ rdv.date|date:"d/m/Y" }} à {{ rdv.heure|time:"H:i" }}</td>
-                                <td>{{ rdv.lieu }}</td>
-                                <td>
-                                    <span class="badge {% if rdv.statut == 'confirme' %}badge-success{% elif rdv.statut == 'annule' %}badge-danger{% else %}badge-warning{% endif %}">
-                                        {{ rdv.statut }}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" style="text-align: center; color: #999;">Aucun rendez-vous</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="section-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Propriété</th>
+                                    <th>Date/Heure</th>
+                                    <th>Lieu</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rdv in derniers_rdv %}
+                                <tr>
+                                    <td>{{ rdv.client.first_name }} {{ rdv.client.last_name }}</td>
+                                    <td>{{ rdv.propriete.type_bien }} - {{ rdv.propriete.prix }} FCFA</td>
+                                    <td>{{ rdv.date|date:"d/m/Y" }} à {{ rdv.heure|time:"H:i" }}</td>
+                                    <td>{{ rdv.lieu }}</td>
+                                    <td>
+                                        <span class="badge {% if rdv.statut == 'confirme' %}badge-success{% elif rdv.statut == 'annule' %}badge-danger{% else %}badge-warning{% endif %}">
+                                            {{ rdv.statut }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Aucun rendez-vous</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Liste des utilisateurs avec filtres -->
+            <!-- Gestion des utilisateurs -->
             <div class="section">
-                <div class="section-title">
-                    <h3>👥 Gestion des utilisateurs</h3>
-                    <div style="display: flex; gap: 10px;">
-                        <select onchange="window.location.href='?type='+this.value" style="padding: 6px; border-radius: 4px;">
+                <div class="section-header">
+                    <h3><i class="fas fa-users-cog"></i> Gestion des utilisateurs</h3>
+                    <div>
+                        <select class="filter-select" onchange="window.location.href='?type='+this.value">
                             <option value="tous" {% if filtre_type == 'tous' %}selected{% endif %}>Tous</option>
                             <option value="clients" {% if filtre_type == 'clients' %}selected{% endif %}>Clients</option>
                             <option value="agents" {% if filtre_type == 'agents' %}selected{% endif %}>Agents</option>
@@ -659,128 +1017,193 @@
                         </select>
                     </div>
                 </div>
-
-                <!-- Recherche -->
-                <form method="get" class="search-box">
-                    <input type="text" name="recherche" placeholder="Rechercher un utilisateur..." value="{{ recherche }}">
-                    <input type="hidden" name="type" value="{{ filtre_type }}">
-                    <button type="submit" class="btn btn-primary">🔍 Rechercher</button> {% if recherche %}
-                    <a href="?type={{ filtre_type }}" class="btn">✖ Réinitialiser</a> {% endif %}
-                </form>
-
-                <!-- Tableau des utilisateurs -->
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Nom d'utilisateur</th>
-                                <th>Email</th>
-                                <th>Téléphone</th>
-                                <th>Rôle</th>
-                                <th>Date inscription</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in utilisateurs %}
-                            <tr>
-                                <td>{{ user.first_name }} {{ user.last_name }}</td>
-                                <td>@{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.profil.telephone|default:"-" }}</td>
-                                <td>
-                                    <span class="badge {% if user.profil.role == 'client' %}badge-info{% elif user.profil.role == 'agent' %}badge-success{% elif user.profil.role == 'bailleur' %}badge-warning{% else %}badge-primary{% endif %}">
-                                        {{ user.profil.role|default:"-" }}
-                                    </span>
-                                </td>
-                                <td>{{ user.date_joined|date:"d/m/Y" }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning" onclick="modifierUtilisateur({{ user.id }})">✏️</button>
-                                    <button class="btn btn-sm btn-danger" onclick="supprimerUtilisateur({{ user.id }})">🗑️</button> {% if user.profil.role == 'client' %}
-                                    <button class="btn btn-sm btn-primary" onclick="affecterClient({{ user.id }})">🤝</button> {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="7" style="text-align: center; color: #999;">Aucun utilisateur trouvé</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                {% if pages_total > 1 %}
-                <div class="pagination">
-                    {% if page_actuelle > 1 %}
-                    <a href="?page={{ page_actuelle|add:'-1' }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link">←</a> {% endif %} {% for i in pages_total|make_list %} {% if forloop.counter
-                    <=5 %} <a href="?page={{ forloop.counter }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link {% if page_actuelle == forloop.counter %}active{% endif %}">
-                        {{ forloop.counter }}
+                <div class="section-body">
+                    <!-- Recherche -->
+                    <form method="get" class="search-box">
+                        <input type="text" name="recherche" placeholder="Rechercher un utilisateur..." value="{{ recherche }}">
+                        <input type="hidden" name="type" value="{{ filtre_type }}">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search me-2"></i>Rechercher
+                        </button> {% if recherche %}
+                        <a href="?type={{ filtre_type }}" class="reset-btn">
+                            <i class="fas fa-times me-2"></i>Réinitialiser
                         </a>
-                        {% endif %} {% endfor %} {% if page_actuelle
-                        < pages_total %} <a href="?page={{ page_actuelle|add:'1' }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link">→</a>
-                            {% endif %}
+                        {% endif %}
+                    </form>
+
+                    <!-- Tableau des utilisateurs -->
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Rôle</th>
+                                    <th>Date inscription</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in utilisateurs %}
+                                <tr>
+                                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                    <td>@{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.profil.telephone|default:"-" }}</td>
+                                    <td>
+                                        <span class="badge {% if user.profil.role == 'client' %}badge-info{% elif user.profil.role == 'agent' %}badge-success{% elif user.profil.role == 'bailleur' %}badge-warning{% else %}badge-primary{% endif %}">
+                                            {{ user.profil.role|default:"-" }}
+                                        </span>
+                                    </td>
+                                    <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="modifierUtilisateur({{ user.id }})" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon delete" onclick="supprimerUtilisateur({{ user.id }})" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button> {% if user.profil.role == 'client' %}
+                                        <button class="btn-icon assign" onclick="affecterClient({{ user.id }})" title="Affecter">
+                                                <i class="fas fa-handshake"></i>
+                                            </button> {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">Aucun utilisateur trouvé</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if pages_total > 1 %}
+                    <div class="pagination">
+                        {% if page_actuelle > 1 %}
+                        <a href="?page={{ page_actuelle|add:'-1' }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        {% endif %} {% for i in pages_total|make_list %} {% if forloop.counter
+                        <=5 %} <a href="?page={{ forloop.counter }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link {% if page_actuelle == forloop.counter %}active{% endif %}">
+                            {{ forloop.counter }}
+                            </a>
+                            {% endif %} {% endfor %} {% if page_actuelle
+                            < pages_total %} <a href="?page={{ page_actuelle|add:'1' }}&type={{ filtre_type }}&recherche={{ recherche }}" class="page-link">
+                                <i class="fas fa-chevron-right"></i>
+                                </a>
+                                {% endif %}
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="footer-title">Agence Immobilière</h5>
+                    <p>Votre partenaire de confiance pour tous vos projets immobiliers.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5 class="footer-title">Liens rapides</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                        <li><a href="{% url 'propos' %}">À propos</a></li>
+                        <li><a href="{% url 'propierte' %}">Propriétés</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Contact</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone me-2"></i>+225 07 89 65 43 21</li>
+                        <li><i class="fas fa-envelope me-2"></i>contact@agenceimmo.ci</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>Abidjan, Cocody</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Suivez-nous</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {% now "Y" %} Agence Immobilière. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- MODAL AJOUTER UTILISATEUR -->
     <div id="modalAjouterUtilisateur" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>➕ Ajouter un utilisateur</h2>
+                <h2><i class="fas fa-user-plus"></i> Ajouter un utilisateur</h2>
                 <span class="close" onclick="closeModal('ajouterUtilisateur')">&times;</span>
             </div>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="ajouter_utilisateur">
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="ajouter_utilisateur">
 
-                <div class="form-group">
-                    <label>Rôle</label>
-                    <select name="role" class="form-control" required>
-                        <option value="">-- Sélectionner --</option>
-                        <option value="client">👤 Client</option>
-                        <option value="agent">🤝 Agent</option>
-                        <option value="bailleur">👑 Bailleur</option>
-                        <option value="manager">👨‍💼 Manager</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>Rôle</label>
+                        <select name="role" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option value="client">👤 Client</option>
+                            <option value="agent">🤝 Agent</option>
+                            <option value="bailleur">👑 Bailleur</option>
+                            <option value="manager">👨‍💼 Manager</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label>Nom</label>
-                    <input type="text" name="nom" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" name="nom" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Prénom</label>
-                    <input type="text" name="prenom" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Nom d'utilisateur</label>
-                    <input type="text" name="username" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Téléphone</label>
-                    <input type="text" name="telephone" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="text" name="telephone" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Mot de passe (défaut: Passer@123)</label>
-                    <input type="password" name="password" class="form-control" value="Passer@123">
-                </div>
+                    <div class="form-group">
+                        <label>Mot de passe (défaut: Passer@123)</label>
+                        <input type="password" name="password" class="form-control" value="Passer@123">
+                    </div>
 
-                <button type="submit" class="btn btn-success" style="width: 100%;">✅ Ajouter</button>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('ajouterUtilisateur')">Annuler</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-2"></i>Ajouter
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -788,35 +1211,42 @@
     <div id="modalAffecterClient" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🤝 Affecter un client à un agent</h2>
+                <h2><i class="fas fa-handshake"></i> Affecter un client</h2>
                 <span class="close" onclick="closeModal('affecterClient')">&times;</span>
             </div>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="affecter_client">
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="affecter_client">
 
-                <div class="form-group">
-                    <label>Client</label>
-                    <select name="client_id" class="form-control" required>
-                        <option value="">-- Sélectionner --</option>
-                        {% for client in liste_clients %}
-                        <option value="{{ client.id }}">{{ client.first_name }} {{ client.last_name }} ({{ client.email }})</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>Client</label>
+                        <select name="client_id" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            {% for client in liste_clients %}
+                                <option value="{{ client.id }}">{{ client.first_name }} {{ client.last_name }} ({{ client.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label>Agent</label>
-                    <select name="agent_id" class="form-control" required>
-                        <option value="">-- Sélectionner --</option>
-                        {% for agent in liste_agents %}
-                        <option value="{{ agent.id }}">{{ agent.first_name }} {{ agent.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>Agent</label>
+                        <select name="agent_id" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            {% for agent in liste_agents %}
+                                <option value="{{ agent.id }}">{{ agent.first_name }} {{ agent.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <button type="submit" class="btn btn-success" style="width: 100%;">✅ Affecter</button>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('affecterClient')">Annuler</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-2"></i>Affecter
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -824,35 +1254,42 @@
     <div id="modalReaffecterClient" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🔄 Réaffecter un client</h2>
+                <h2><i class="fas fa-sync-alt"></i> Réaffecter un client</h2>
                 <span class="close" onclick="closeModal('reaffecterClient')">&times;</span>
             </div>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="reaffecter_client">
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="reaffecter_client">
 
-                <div class="form-group">
-                    <label>Client</label>
-                    <select name="client_id" class="form-control" required>
-                        <option value="">-- Sélectionner --</option>
-                        {% for client in liste_clients %}
-                        <option value="{{ client.id }}">{{ client.first_name }} {{ client.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>Client</label>
+                        <select name="client_id" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            {% for client in liste_clients %}
+                                <option value="{{ client.id }}">{{ client.first_name }} {{ client.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label>Nouvel agent</label>
-                    <select name="nouvel_agent_id" class="form-control" required>
-                        <option value="">-- Sélectionner --</option>
-                        {% for agent in liste_agents %}
-                        <option value="{{ agent.id }}">{{ agent.first_name }} {{ agent.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>Nouvel agent</label>
+                        <select name="nouvel_agent_id" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            {% for agent in liste_agents %}
+                                <option value="{{ agent.id }}">{{ agent.first_name }} {{ agent.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <button type="submit" class="btn btn-warning" style="width: 100%;">🔄 Réaffecter</button>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('reaffecterClient')">Annuler</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-sync-alt me-2"></i>Réaffecter
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -860,20 +1297,24 @@
     <div id="modalSupprimer" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🗑️ Confirmer la suppression</h2>
+                <h2><i class="fas fa-trash-alt"></i> Confirmer la suppression</h2>
                 <span class="close" onclick="closeModal('supprimer')">&times;</span>
             </div>
-            <p style="margin-bottom: 20px;">Êtes-vous sûr de vouloir supprimer cet utilisateur ?</p>
-            <form method="post" id="formSupprimer">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="supprimer_utilisateur">
-                <input type="hidden" name="user_id" id="supprimer_user_id">
+            <div class="modal-body">
+                <p class="mb-4">Êtes-vous sûr de vouloir supprimer cet utilisateur ?</p>
+                <form method="post" id="formSupprimer">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="supprimer_utilisateur">
+                    <input type="hidden" name="user_id" id="supprimer_user_id">
 
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-danger" style="flex: 1;">🗑️ Supprimer</button>
-                    <button type="button" class="btn" onclick="closeModal('supprimer')" style="flex: 1;">Annuler</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('supprimer')">Annuler</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Supprimer
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -881,43 +1322,54 @@
     <div id="modalModifier" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>✏️ Modifier utilisateur</h2>
+                <h2><i class="fas fa-edit"></i> Modifier utilisateur</h2>
                 <span class="close" onclick="closeModal('modifier')">&times;</span>
             </div>
-            <form method="post" id="formModifier">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="modifier_utilisateur">
-                <input type="hidden" name="user_id" id="modifier_user_id">
+            <div class="modal-body">
+                <form method="post" id="formModifier">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="modifier_utilisateur">
+                    <input type="hidden" name="user_id" id="modifier_user_id">
 
-                <div class="form-group">
-                    <label>Nom</label>
-                    <input type="text" name="nom" id="modifier_nom" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" name="nom" id="modifier_nom" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Prénom</label>
-                    <input type="text" name="prenom" id="modifier_prenom" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" id="modifier_prenom" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" id="modifier_email" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" id="modifier_email" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label>Téléphone</label>
-                    <input type="text" name="telephone" id="modifier_telephone" class="form-control" required>
-                </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="text" name="telephone" id="modifier_telephone" class="form-control" required>
+                    </div>
 
-                <button type="submit" class="btn btn-warning" style="width: 100%;">✏️ Modifier</button>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modifier')">Annuler</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save me-2"></i>Modifier
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Ouvrir modal
         function openModal(type) {
-            document.getElementById('modal' + type.charAt(0).toUpperCase() + type.slice(1)).style.display = 'block';
+            const modalId = 'modal' + type.charAt(0).toUpperCase() + type.slice(1);
+            document.getElementById(modalId).style.display = 'block';
         }
 
         // Fermer modal
@@ -934,7 +1386,7 @@
 
         // Modifier utilisateur
         function modifierUtilisateur(userId) {
-            // Récupérer les données de l'utilisateur
+            // Simulation - Dans la vraie vie, faire un fetch vers l'API
             fetch(`/manager/api/?action=get_user&user_id=${userId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -952,7 +1404,6 @@
 
         // Affecter client
         function affecterClient(clientId) {
-            // Pré-remplir le formulaire d'affectation
             const modal = document.getElementById('modalAffecterClient');
             const select = modal.querySelector('select[name="client_id"]');
 
@@ -972,12 +1423,10 @@
             }
         }
 
-        // Rafraîchir les stats
+        // Rafraîchir les stats toutes les 5 minutes
         function refreshStats() {
             location.reload();
         }
-
-        // Rafraîchir toutes les 5 minutes
         setInterval(refreshStats, 300000);
     </script>
 </body>

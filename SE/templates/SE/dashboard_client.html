@@ -1,3 +1,4 @@
+<!-- templates/SE/dashboard_client.html -->
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -6,34 +7,443 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page_title }} - {{ client_nom }}</title>
 
-    <!-- Bootstrap 5 CDN (design simple) -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome 6 (icônes) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* Style général (identique à l'accueil) */
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        /* Navbar */
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        /* Cartes favoris */
+        
+        .favorite-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            background: white;
+        }
+        
+        .favorite-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .favorite-img-wrapper {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+        
+        .favorite-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .favorite-card:hover .favorite-img {
+            transform: scale(1.1);
+        }
+        
+        .favorite-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #dc3545;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .favorite-content {
+            padding: 20px;
+        }
+        
+        .favorite-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .favorite-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .favorite-title small {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: normal;
+        }
+        
+        .favorite-address {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .favorite-address i {
+            color: #667eea;
+            width: 20px;
+        }
+        
+        .favorite-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-top: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .detail-item {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .detail-item i {
+            width: 20px;
+            color: #667eea;
+            margin-right: 5px;
+        }
+        
+        .favorite-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .price-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .favorite-date {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .favorite-date i {
+            margin-right: 3px;
+        }
+        /* Boutons */
+        
+        .btn-explore {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-explore:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+        
+        .btn-delete {
+            background: transparent;
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-delete:hover {
+            background: #dc3545;
+            color: white;
+            transform: scale(1.1);
+        }
+        /* Statistiques */
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        /* État vide */
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .empty-title {
+            font-size: 1.2rem;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .empty-text {
+            color: #868e96;
+            margin-bottom: 20px;
+        }
+        /* Pagination */
+        
+        .pagination {
+            gap: 5px;
+        }
+        
+        .page-link {
+            border: none;
+            border-radius: 10px;
+            color: #667eea;
+            padding: 8px 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .page-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        /* Modal */
+        
+        .modal-content {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+        
+        .modal-footer {
+            border: none;
+            padding: 20px;
+        }
+        
+        .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px;
+            transition: all 0.3s;
+        }
+        
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        /* Footer */
+        
+        .footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 50px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
-
-    <!-- Barre de navigation simple -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'SE:client' %}">
-                <i class="fas fa-heart"></i> Mes Favoris
+            <a class="navbar-brand" href="{% url 'accueil' %}">
+                <i class="fas fa-home me-2"></i>Agence Immobilière
             </a>
-            <div class="navbar-nav ms-auto">
-                <span class="navbar-text text-white me-3">
-                    <i class="fas fa-user"></i> {{ client_nom }}
-                </span>
-                <a href="{% url 'SE:connexion' %}" class="btn btn-sm btn-light">
-                    <i class="fas fa-sign-out-alt"></i> Déconnexion
-                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accueil' %}">
+                            <i class="fas fa-home me-1"></i>Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'propos' %}">
+                            <i class="fas fa-info-circle me-1"></i>À propos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'propierte' %}">
+                            <i class="fas fa-building me-1"></i>Propriétés
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'client' %}">
+                            <i class="fas fa-heart me-1"></i>Mes Favoris
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'connexion' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'inscription' %}">
+                            <i class="fas fa-user-plus me-1"></i>Inscription
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'connexion' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
 
     <!-- Contenu principal -->
     <div class="container py-4">
-
         <!-- Messages flash -->
         {% if messages %} {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4">
@@ -43,100 +453,93 @@
         {% endfor %} {% endif %}
 
         <!-- En-tête avec statistiques -->
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h1 class="h3 mb-2">
-                    <i class="fas fa-heart text-danger"></i> Mes propriétés favorites
-                </h1>
-                <p class="text-muted mb-1">
-                    <i class="fas fa-star"></i> {{ total_favoris }} favori{{ total_favoris|pluralize:"s" }}
-                </p>
-                <p class="text-muted">
-                    <i class="fas fa-building"></i> {{ total_proprietes }} propriété{{ total_proprietes|pluralize:"s" }} au total
-                </p>
-            </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <a href="{% url 'SE:propierte' %}" class="btn btn-outline-primary me-2">
-                    <i class="fas fa-search"></i> Explorer
-                </a>
-                {% if proprietes_disponibles %}
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajoutModal">
-                    <i class="fas fa-plus"></i> Ajouter
-                </button> {% endif %}
+        <div class="stats-card">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="h4 mb-3">
+                        <i class="fas fa-heart text-danger me-2"></i>Mes propriétés favorites
+                    </h2>
+                    <div class="d-flex gap-4">
+                        <div>
+                            <div class="stat-value">{{ total_favoris }}</div>
+                            <div class="stat-label">Favoris</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">{{ total_proprietes }}</div>
+                            <div class="stat-label">Total propriétés</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <a href="{% url 'propierte' %}" class="btn-explore me-2">
+                        <i class="fas fa-search me-1"></i>Explorer
+                    </a>
+                    {% if proprietes_disponibles %}
+                    <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#ajoutModal">
+                            <i class="fas fa-plus me-1"></i>Ajouter
+                        </button> {% endif %}
+                </div>
             </div>
         </div>
 
         <!-- Liste des favoris -->
         {% if favoris %}
-        <div class="row g-3">
+        <div class="row g-4">
             {% for favori in favoris %}
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <!-- Image de la propriété -->
-                    <div style="height: 160px; overflow: hidden; background-color: #f8f9fa;">
+                <div class="favorite-card">
+                    <div class="favorite-img-wrapper">
                         {% if favori.propriete.image %}
-                        <img src="{{ favori.propriete.image.url }}" class="card-img-top" alt="{{ favori.propriete.type_bien }}" style="width: 100%; height: 100%; object-fit: cover;"> {% else %}
+                        <img src="{{ favori.propriete.image.url }}" class="favorite-img" alt="{{ favori.propriete.type_bien }}"> {% else %}
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <i class="fas fa-building fa-3x text-secondary"></i>
                         </div>
                         {% endif %}
+                        <span class="favorite-badge">
+                                    <i class="fas fa-heart text-danger me-1"></i>Favori
+                                </span>
                     </div>
 
-                    <!-- Contenu de la carte -->
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title mb-0">
+                    <div class="favorite-content">
+                        <div class="favorite-header">
+                            <h5 class="favorite-title">
                                 {{ favori.propriete.type_bien|title }}
-                                <small class="text-muted">({{ favori.propriete.option }})</small>
+                                <small>({{ favori.propriete.option }})</small>
                             </h5>
-
-                            <!-- Formulaire de suppression -->
-                            <form method="POST" action="{% url 'SE:client' %}" onsubmit="return confirm('Retirer des favoris ?');">
+                            <form method="POST" action="{% url 'client' %}" onsubmit="return confirm('Retirer des favoris ?');">
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="supprimer">
                                 <input type="hidden" name="favori_id" value="{{ favori.id }}">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <button type="submit" class="btn-delete" title="Retirer des favoris">
                                             <i class="fas fa-trash"></i>
                                         </button>
                             </form>
                         </div>
 
-                        <!-- Informations principales -->
-                        <p class="card-text small text-muted mb-2">
+                        <p class="favorite-address">
                             <i class="fas fa-map-marker-alt"></i> {{ favori.propriete.adresse|truncatechars:30 }}
                         </p>
 
-                        <div class="row g-1 mb-2">
-                            <div class="col-6">
-                                <small class="text-muted">
-                                            <i class="fas fa-arrows-alt"></i> {{ favori.propriete.surface }} m²
-                                        </small>
+                        <div class="favorite-details">
+                            <div class="detail-item">
+                                <i class="fas fa-arrows-alt"></i> {{ favori.propriete.surface }} m²
                             </div>
-                            <div class="col-6">
-                                <small class="text-muted">
-                                            <i class="fas fa-door-open"></i> {{ favori.propriete.nombre_piece }} pièce{{ favori.propriete.nombre_piece|pluralize:"s" }}
-                                        </small>
+                            <div class="detail-item">
+                                <i class="fas fa-door-open"></i> {{ favori.propriete.nombre_piece }} pièce{{ favori.propriete.nombre_piece|pluralize:"s" }}
                             </div>
-                            <div class="col-6">
-                                <small class="text-muted">
-                                            <i class="fas fa-calendar"></i> {{ favori.propriete.annee }}
-                                        </small>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i> {{ favori.propriete.annee }}
                             </div>
-                            <div class="col-6">
-                                <small class="text-muted">
-                                            <i class="fas fa-tag"></i> {{ favori.propriete.categorie }}
-                                        </small>
+                            <div class="detail-item">
+                                <i class="fas fa-tag"></i> {{ favori.propriete.categorie }}
                             </div>
                         </div>
 
-                        <!-- Prix et date d'ajout -->
-                        <div class="d-flex justify-content-between align-items-center mt-2">
-                            <span class="fw-bold text-primary">
-                                        {{ favori.propriete.prix }} FCFA
-                                    </span>
-                            <small class="text-muted">
+                        <div class="favorite-price">
+                            <span class="price-value">{{ favori.propriete.prix }} FCFA</span>
+                            <span class="favorite-date">
                                         <i class="far fa-clock"></i> {{ favori.date_ajout|date:"d/m/Y" }}
-                                    </small>
+                                    </span>
                         </div>
                     </div>
                 </div>
@@ -146,7 +549,7 @@
 
         <!-- Pagination -->
         {% if favoris.has_other_pages %}
-        <nav class="mt-4">
+        <nav class="mt-5">
             <ul class="pagination justify-content-center">
                 {% if favoris.has_previous %}
                 <li class="page-item">
@@ -155,9 +558,13 @@
                     </a>
                 </li>
                 {% endif %} {% for i in favoris.paginator.page_range %} {% if favoris.number == i %}
-                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                </li>
                 {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                </li>
                 {% endif %} {% endfor %} {% if favoris.has_next %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ favoris.next_page_number }}">
@@ -168,17 +575,17 @@
             </ul>
         </nav>
         {% endif %} {% else %}
-        <!-- Aucun favori -->
-        <div class="text-center py-5">
-            <div class="mb-3">
-                <i class="fas fa-heart-broken fa-4x text-muted"></i>
+        <!-- État vide -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-heart-broken"></i>
             </div>
-            <h3 class="h5 text-muted">Aucune propriété favorite</h3>
-            <p class="text-muted mb-3">
+            <h3 class="empty-title">Aucune propriété favorite</h3>
+            <p class="empty-text">
                 Commencez à explorer et ajoutez des propriétés à vos favoris.
             </p>
-            <a href="{% url 'SE:propierte' %}" class="btn btn-primary">
-                <i class="fas fa-search"></i> Explorer les propriétés
+            <a href="{% url 'propierte' %}" class="btn-explore">
+                <i class="fas fa-search me-2"></i>Explorer les propriétés
             </a>
         </div>
         {% endif %}
@@ -187,36 +594,43 @@
     <!-- Modal d'ajout de favori -->
     {% if proprietes_disponibles %}
     <div class="modal fade" id="ajoutModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-plus-circle"></i> Ajouter aux favoris
+                        <i class="fas fa-plus-circle me-2"></i>Ajouter aux favoris
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST" action="{% url 'SE:client' %}">
+                <form method="POST" action="{% url 'client' %}">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="ajouter">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="propriete_id" class="form-label">Choisir une propriété</label>
+                            <label for="propriete_id" class="form-label fw-bold">
+                                    Choisir une propriété
+                                </label>
                             <select name="propriete_id" id="propriete_id" class="form-select" required>
-                                <option value="" selected disabled>-- Sélectionnez une propriété --</option>
-                                {% for propriete in proprietes_disponibles %}
-                                    <option value="{{ propriete.id }}">
-                                        {{ propriete.type_bien|title }} - {{ propriete.adresse|truncatechars:30 }} - {{ propriete.prix }} FCFA
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            <small class="text-muted">{{ proprietes_disponibles|length }} propriété{{ proprietes_disponibles|pluralize:"s" }} disponible{{ proprietes_disponibles|pluralize:"s" }}</small>
+                                    <option value="" selected disabled>-- Sélectionnez une propriété --</option>
+                                    {% for propriete in proprietes_disponibles %}
+                                        <option value="{{ propriete.id }}">
+                                            {{ propriete.type_bien|title }} - {{ propriete.adresse|truncatechars:30 }} - {{ propriete.prix }} FCFA
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    {{ proprietes_disponibles|length }} propriété{{ proprietes_disponibles|pluralize:"s" }} disponible{{ proprietes_disponibles|pluralize:"s" }}
+                                </small>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i>Annuler
+                            </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-heart"></i> Ajouter
-                        </button>
+                                <i class="fas fa-heart me-1"></i>Ajouter
+                            </button>
                     </div>
                 </form>
             </div>
@@ -224,15 +638,63 @@
     </div>
     {% endif %}
 
-    <!-- Footer simple -->
-    <footer class="bg-white border-top mt-5 py-3">
-        <div class="container text-center text-muted">
-            <small>&copy; {% now "Y" %} Mon Application - Tous droits réservés</small>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="footer-title">Agence Immobilière</h5>
+                    <p>Votre partenaire de confiance pour tous vos projets immobiliers.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5 class="footer-title">Liens rapides</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                        <li><a href="{% url 'propos' %}">À propos</a></li>
+                        <li><a href="{% url 'propierte' %}">Propriétés</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Contact</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone me-2"></i>+225 07 89 65 43 21</li>
+                        <li><i class="fas fa-envelope me-2"></i>contact@agenceimmo.ci</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>Abidjan, Cocody</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Suivez-nous</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {% now "Y" %} Agence Immobilière. Tous droits réservés.</p>
+            </div>
         </div>
     </footer>
 
-    <!-- Scripts Bootstrap -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script pour la navbar active -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUrl = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentUrl) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

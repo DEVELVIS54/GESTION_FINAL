@@ -1,38 +1,73 @@
-<!-- templates/inscription/connexion.html -->
+<!-- templates/SE/connexion.html -->
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
+    <title>Connexion - Agence Immobilière</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+        /* Style général (identique à l'accueil et inscription) */
         
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+        /* Navbar (identique) */
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        /* Conteneur principal */
+        
+        .login-container {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
+        /* Carte de connexion */
         
-        .container {
+        .login-card {
             width: 100%;
             max-width: 450px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
+            border: none;
+            border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            background: white;
             animation: fadeIn 0.5s ease-out;
         }
         
@@ -47,48 +82,54 @@
             }
         }
         
-        .card-header {
-            background: #2c3e50;
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
         }
         
-        .card-header h1 {
-            font-size: 28px;
+        .login-header h1 {
+            font-size: 2rem;
+            font-weight: bold;
             margin-bottom: 10px;
         }
         
-        .card-header p {
+        .login-header p {
             opacity: 0.9;
-            font-size: 14px;
+            margin: 0;
+            font-size: 1rem;
         }
         
-        .card-body {
-            padding: 30px;
+        .login-body {
+            padding: 40px;
+        }
+        /* Messages */
+        
+        .messages {
+            margin-bottom: 30px;
         }
         
         .alert {
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 15px 20px;
+            border: none;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
         .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
         }
         
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .alert-error,
+        .alert-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
         }
+        /* Formulaire */
         
         .form-group {
             margin-bottom: 25px;
@@ -98,78 +139,80 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #333;
-            font-size: 14px;
+            color: #555;
+            font-size: 0.95rem;
         }
         
         .form-control {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #e9ecef;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 1rem;
             transition: all 0.3s;
         }
         
         .form-control:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
+        
+        .form-control::placeholder {
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        /* Checkbox */
         
         .form-check {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 15px 0;
+            margin: 20px 0;
         }
         
         .form-check-input {
             width: 18px;
             height: 18px;
             cursor: pointer;
+            border: 2px solid #e9ecef;
+        }
+        
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
         }
         
         .form-check-label {
             color: #666;
             cursor: pointer;
+            font-size: 0.95rem;
         }
+        /* Bouton de connexion */
         
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: #2c3e50;
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
+            padding: 16px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 1.1rem;
             font-weight: 600;
+            width: 100%;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            margin-bottom: 20px;
         }
         
-        .btn:hover {
-            background: #1a252f;
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
-        
-        .links {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 14px;
-        }
-        
-        .links a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        
-        .links a:hover {
-            text-decoration: underline;
-        }
+        /* Séparateur */
         
         .separator {
             display: flex;
@@ -183,73 +226,258 @@
         .separator::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 2px solid #e9ecef;
         }
         
         .separator span {
-            padding: 0 10px;
+            padding: 0 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
         }
+        /* Bouton Google */
         
         .btn-google {
             background: white;
             color: #333;
-            border: 2px solid #ddd;
-            margin-top: 15px;
+            border: 2px solid #e9ecef;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
         }
         
         .btn-google:hover {
             background: #f8f9fa;
-            border-color: #2c3e50;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-google i {
+            color: #4285f4;
+            font-size: 1.2rem;
+        }
+        /* Liens */
+        
+        .links {
+            text-align: center;
+        }
+        
+        .links p {
+            margin: 10px 0;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .forgot-password {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        /* Footer (identique) */
+        
+        .footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 50px 0 20px;
+            margin-top: auto;
+        }
+        
+        .footer-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
         }
         
         @media (max-width: 576px) {
-            .card-body {
-                padding: 20px;
+            .login-body {
+                padding: 25px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="card">
+    <!-- Navigation (identique à l'accueil) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accueil' %}">
+                <i class="fas fa-home me-2"></i>Agence Immobilière
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'accueil' %}active{% endif %}" href="{% url 'accueil' %}">
+                            <i class="fas fa-home me-1"></i>Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'propos' %}active{% endif %}" href="{% url 'propos' %}">
+                            <i class="fas fa-info-circle me-1"></i>À propos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'propierte' %}active{% endif %}" href="{% url 'propierte' %}">
+                            <i class="fas fa-building me-1"></i>Propriétés
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="
+                                {% if user.profil.role == 'bailleur' %}
+                                    {% url 'bailleur' %}
+                                {% elif user.profil.role == 'agent' %}
+                                    {% url 'agent' %}
+                                {% elif user.profil.role == 'manager' %}
+                                    {% url 'dashboard_manager' %}
+                                {% else %}
+                                    {% url 'client' %}
+                                {% endif %}
+                            ">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'connexion' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'inscription' %}active{% endif %}" href="{% url 'inscription' %}">
+                            <i class="fas fa-user-plus me-1"></i>Inscription
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'connexion' %}active{% endif %}" href="{% url 'connexion' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="login-container">
+        <div class="login-card">
             <!-- Header -->
-            <div class="card-header">
-                <h1>🔐 Connexion</h1>
+            <div class="login-header">
+                <i class="fas fa-lock fa-3x mb-3"></i>
+                <h1>Connexion</h1>
                 <p>Accédez à votre tableau de bord</p>
             </div>
 
             <!-- Body -->
-            <div class="card-body">
+            <div class="login-body">
                 <!-- Messages -->
-                {% if messages %} {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {% if message.tags == 'success' %}
+                        <i class="fas fa-check-circle fa-lg"></i> {% else %}
+                        <i class="fas fa-exclamation-circle fa-lg"></i> {% endif %} {{ message }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %} {% endif %}
+                {% endif %}
 
                 <!-- Formulaire -->
                 <form method="POST">
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <label for="id_username">Nom d'utilisateur ou Email</label>
+                        <label for="id_username">
+                            <i class="fas fa-user me-2"></i>Nom d'utilisateur ou Email
+                        </label>
                         <input type="text" name="username" id="id_username" class="form-control" placeholder="Entrez votre identifiant" autofocus required>
                     </div>
 
                     <div class="form-group">
-                        <label for="id_password">Mot de passe</label>
+                        <label for="id_password">
+                            <i class="fas fa-lock me-2"></i>Mot de passe
+                        </label>
                         <input type="password" name="password" id="id_password" class="form-control" placeholder="••••••••" required>
                     </div>
 
                     <div class="form-check">
                         <input type="checkbox" name="remember_me" id="id_remember_me" class="form-check-input" checked>
                         <label for="id_remember_me" class="form-check-label">
+                            <i class="far fa-check-circle me-1"></i>
                             Se souvenir de moi
                         </label>
                     </div>
 
-                    <button type="submit" class="btn">
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i>
                         <span>Se connecter</span>
                     </button>
                 </form>
@@ -258,19 +486,71 @@
                     <span>ou</span>
                 </div>
 
-                <a href="#" class="btn btn-google" style="text-decoration: none;">
+                <a href="#" class="btn-google">
+                    <i class="fab fa-google"></i>
                     <span>Continuer avec Google</span>
                 </a>
 
                 <div class="links">
-                    <p>Pas encore de compte ? <a href="{% url 'inscription' %}">S'inscrire</a></p>
-                    <p style="margin-top: 10px;">
-                        <a href="#">Mot de passe oublié ?</a>
+                    <p>
+                        <i class="far fa-question-circle me-1"></i> Pas encore de compte ?
+                        <a href="{% url 'inscription' %}">
+                            <i class="fas fa-user-plus me-1"></i>S'inscrire
+                        </a>
+                    </p>
+                    <p>
+                        <a href="#" class="forgot-password">
+                            <i class="fas fa-key me-1"></i>Mot de passe oublié ?
+                        </a>
                     </p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Footer (identique à l'accueil) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="footer-title">Agence Immobilière</h5>
+                    <p>Votre partenaire de confiance pour tous vos projets immobiliers.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5 class="footer-title">Liens rapides</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                        <li><a href="{% url 'propos' %}">À propos</a></li>
+                        <li><a href="{% url 'propierte' %}">Propriétés</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Contact</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone me-2"></i>+225 07 89 65 43 21</li>
+                        <li><i class="fas fa-envelope me-2"></i>contact@agenceimmo.ci</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>Abidjan, Cocody</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Suivez-nous</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {% now "Y" %} Agence Immobilière. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

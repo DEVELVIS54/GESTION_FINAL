@@ -5,7 +5,7 @@ urlpatterns = [
     # DASHBOARD MANAGER (protégé)
     path('manager/', views.manager, name='dashboard_manager'),
     path('agent/', views.agent, name='agent'),
-    path('dashboard_bailleur/', views.dashboard_bailleur, name='dashboard_bailleur'),
+    path('bailleur/', views.bailleur, name='bailleur'),
     path('client/', views.client, name='client'),
     path('accueil/', views.accueil, name='accueil'),
     path('inscription/', views.inscription, name='inscription'),

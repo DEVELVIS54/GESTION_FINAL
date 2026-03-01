@@ -4,9 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import Profil
+from django.contrib.auth import authenticate  # ← AJOUTE CETTE LIGNE !
 import re
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 class InscriptionForm(UserCreationForm):
+    
     """
     Formulaire d'inscription personnalisé avec choix de profil
     """
