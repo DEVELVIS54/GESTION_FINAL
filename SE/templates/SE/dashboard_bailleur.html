@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - {{ bailleur_nom }}</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-light">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard_bailleur' %}">
+                <i class="fas fa-home"></i> Espace Bailleur
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="fas fa-user"></i> {{ bailleur_nom }}
+                </span>
+                <a href="{% url 'connexion' %}" class="btn btn-sm btn-light">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+
+        <!-- Messages flash -->
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %} {% endif %}
+
+        <!-- En-tête avec statistiques -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h3 mb-3">
+                    <i class="fas fa-chart-line"></i> Tableau de bord
+                </h1>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ajoutModal">
+                    <i class="fas fa-plus"></i> Nouvelle propriété
+                </button>
+            </div>
+        </div>
+
+        <!-- Cartes statistiques -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total propriétés</h5>
+                        <h2 class="mb-0">{{ total_proprietes }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">En vente</h5>
+                        <h2 class="mb-0">{{ total_vente }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">En location</h5>
+                        <h2 class="mb-0">{{ total_location }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des propriétés -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Mes propriétés</h5>
+            </div>
+            <div class="card-body">
+                {% if proprietes %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Option</th>
+                                <th>Adresse</th>
+                                <th>Surface</th>
+                                <th>Pièces</th>
+                                <th>Prix</th>
+                                <th>Photo</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for propriete in proprietes %}
+                            <tr>
+                                <td>{{ propriete.type_bien|title }}</td>
+                                <td>
+                                    <span class="badge {% if propriete.option == 'vente' %}bg-success{% else %}bg-info{% endif %}">
+                                            {{ propriete.option|title }}
+                                        </span>
+                                </td>
+                                <td>{{ propriete.adresse|truncatechars:30 }}</td>
+                                <td>{{ propriete.surface }} m²</td>
+                                <td>{{ propriete.nombre_piece }}</td>
+                                <td>{{ propriete.prix }} FCFA</td>
+                                <td>
+                                    {% if propriete.image %}
+                                    <img src="{{ propriete.image.url }}" alt="photo" style="width: 50px; height: 50px; object-fit: cover;"> {% else %}
+                                    <span class="text-muted">Aucune</span> {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" onclick="editPropriete({{ propriete.id }})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Supprimer cette propriété ?');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="supprimer">
+                                        <input type="hidden" name="propriete_id" value="{{ propriete.id }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if proprietes.has_other_pages %}
+                <nav class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        {% if proprietes.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ proprietes.previous_page_number }}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        {% endif %} {% for i in proprietes.paginator.page_range %} {% if proprietes.number == i %}
+                        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %} {% endfor %} {% if proprietes.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ proprietes.next_page_number }}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %} {% else %}
+                <p class="text-center text-muted my-4">
+                    Aucune propriété enregistrée.
+                    <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#ajoutModal">
+                            Ajouter votre première propriété
+                        </button>
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'ajout -->
+    <div class="modal fade" id="ajoutModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle"></i> Nouvelle propriété
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="ajouter">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Type de bien *</label>
+                                <select name="type_bien" class="form-select" required>
+                                    {% for value, label in type_choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Option *</label>
+                                <select name="option" class="form-select" required>
+                                    {% for value, label in option_choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Catégorie *</label>
+                                <select name="categorie" class="form-select" required>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}">{{ cat.type_categorie }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Adresse *</label>
+                                <input type="text" name="adresse" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Surface (m²) *</label>
+                                <input type="number" name="surface" class="form-control" step="0.01" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Nombre de pièces *</label>
+                                <input type="number" name="nombre_piece" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Année *</label>
+                                <input type="number" name="annee" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Prix (FCFA) *</label>
+                                <input type="number" name="prix" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Photo</label>
+                                <input type="file" name="image" class="form-control" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editPropriete(id) {
+            alert('Fonction de modification à implémenter - ID: ' + id);
+        }
+    </script>
+</body>
+
+</html>

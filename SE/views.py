@@ -321,10 +321,10 @@ def client(request):
     }
     
     return render(request, 'SE/dashboard_client.html', context)
-def bailleur(request):
+#def bailleur(request):
     
     
-    return render(request, 'SE/dashboard_bailleur.html')
+   # return render(request, 'SE/dashboard_bailleur.html')
 
 
 
@@ -343,11 +343,111 @@ def propos(request):
 
 
 
-
-def manager(request):
+@login_required
+def dashboard_bailleur(request):
+    """
+    Dashboard bailleur unique - Gestion complète des propriétés
+    """
+    # TRAITEMENT DES ACTIONS POST (Ajout/Modification/Suppression)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        # AJOUTER UNE PROPRIÉTÉ
+        if action == 'ajouter':
+            try:
+                propriete = Propriete.objects.create(
+                    type_bien=request.POST.get('type_bien'),
+                    option=request.POST.get('option'),
+                    adresse=request.POST.get('adresse'),
+                    surface=request.POST.get('surface'),
+                    nombre_piece=request.POST.get('nombre_piece'),
+                    annee=request.POST.get('annee'),
+                    prix=request.POST.get('prix'),
+                    categorie_id=request.POST.get('categorie'),
+                    bailleur=request.user,
+                )
+                
+                if request.FILES.get('image'):
+                    propriete.image = request.FILES['image']
+                    propriete.save()
+                
+                messages.success(request, f"✅ {propriete.type_bien} ajouté avec succès!")
+            except Exception as e:
+                messages.error(request, f"❌ Erreur: {str(e)}")
+        
+        # MODIFIER UNE PROPRIÉTÉ
+        elif action == 'modifier':
+            propriete_id = request.POST.get('propriete_id')
+            propriete = get_object_or_404(Propriete, id=propriete_id, bailleur=request.user)
+            
+            try:
+                propriete.type_bien = request.POST.get('type_bien')
+                propriete.option = request.POST.get('option')
+                propriete.adresse = request.POST.get('adresse')
+                propriete.surface = request.POST.get('surface')
+                propriete.nombre_piece = request.POST.get('nombre_piece')
+                propriete.annee = request.POST.get('annee')
+                propriete.prix = request.POST.get('prix')
+                propriete.categorie_id = request.POST.get('categorie')
+                
+                if request.FILES.get('image'):
+                    propriete.image = request.FILES['image']
+                
+                propriete.save()
+                messages.success(request, f"✅ {propriete.type_bien} modifié avec succès!")
+            except Exception as e:
+                messages.error(request, f"❌ Erreur: {str(e)}")
+        
+        # SUPPRIMER UNE PROPRIÉTÉ
+        elif action == 'supprimer':
+            propriete_id = request.POST.get('propriete_id')
+            propriete = get_object_or_404(Propriete, id=propriete_id, bailleur=request.user)
+            type_bien = propriete.type_bien
+            propriete.delete()
+            messages.success(request, f"🗑️ {type_bien} supprimé avec succès!")
+        
+        return redirect('bailleur')
     
+    # AFFICHAGE (GET)
+    proprietes_list = Propriete.objects.filter(
+        bailleur=request.user
+    ).select_related('categorie').order_by('-id')
     
-    return render(request, 'SE/dashboard_manager.html')
+    # Pagination
+    paginator = Paginator(proprietes_list, 9)
+    page = request.GET.get('page')
+    proprietes = paginator.get_page(page)
+    
+    # Statistiques
+    total_proprietes = proprietes_list.count()
+    total_vente = proprietes_list.filter(option='vente').count()
+    total_location = proprietes_list.filter(option='location').count()
+    
+    # Données pour les formulaires
+    categories = Categorie.objects.all()
+    type_choices = [
+        ('villa', 'Villa'),
+        ('appartement', 'Appartement'),
+        ('terrain', 'Terrain'),
+        ('bureau', 'Bureau'),
+    ]
+    option_choices = [
+        ('vente', 'Vente'),
+        ('location', 'Location'),
+    ]
+    
+    context = {
+        'proprietes': proprietes,
+        'total_proprietes': total_proprietes,
+        'total_vente': total_vente,
+        'total_location': total_location,
+        'categories': categories,
+        'type_choices': type_choices,
+        'option_choices': option_choices,
+        'bailleur_nom': request.user.get_full_name() or request.user.username,
+    }
+    
+    return render(request, 'SE/dashboard_bailleur.html', context)
 
 
 # partie du formulaire d'inscription
