@@ -3,7 +3,7 @@ from . import views
 from django.views.generic.base import RedirectView
 urlpatterns = [
     # DASHBOARD MANAGER (protégé)
-    path('manager/', views.manager, name='dashboard_manager'),
+   # path('manager/', views.manager, name='dashboard_manager'),
     path('agent/', views.agent, name='agent'),
     path('bailleur/', views.bailleur, name='bailleur'),
     path('client/', views.client, name='client'),

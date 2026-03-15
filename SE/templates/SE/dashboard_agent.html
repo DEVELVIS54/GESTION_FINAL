@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent - Tableau de bord</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* STYLE IDENTIQUE AU DASHBOARD MANAGER */
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 56px);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, #2c3e50 0%, #27ae60 100%);
+            color: white;
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar h2 i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 1;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu .logout {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .page-header h1 i {
+            margin-right: 15px;
+            color: #27ae60;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .user-role {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
+        .stat-title {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #95a5a6;
+            font-size: 0.85rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            padding: 20px 25px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        .section-header h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        
+        .section-header h3 i {
+            margin-right: 10px;
+            color: #27ae60;
+        }
+        
+        .section-body {
+            padding: 20px 25px;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+        }
+        
+        .action-btn.success {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .action-btn.warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        
+        .badge-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+        
+        .badge-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+        
+        .badge-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            color: white;
+        }
+        
+        .btn-icon.edit {
+            background: #f39c12;
+        }
+        
+        .btn-icon.edit:hover {
+            background: #e67e22;
+            transform: scale(1.1);
+        }
+        
+        .btn-icon.delete {
+            background: #dc3545;
+        }
+        
+        .btn-icon.delete:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+        
+        .btn-icon.view {
+            background: #3498db;
+        }
+        
+        .btn-icon.view:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .btn-icon.check {
+            background: #27ae60;
+        }
+        
+        .btn-icon.check:hover {
+            background: #229954;
+            transform: scale(1.1);
+        }
+        
+        .btn-icon.cancel {
+            background: #e74c3c;
+        }
+        
+        .btn-icon.cancel:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .modal-header h2 i {
+            margin-right: 10px;
+        }
+        
+        .modal-header .close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-header .close:hover {
+            transform: scale(1.2);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 2px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 0 0.2rem rgba(39, 174, 96, 0.25);
+        }
+        
+        select.form-control {
+            cursor: pointer;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .calendar-day {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .calendar-day h4 {
+            color: #2c3e50;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .rdv-item {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #27ae60;
+            font-size: 0.9rem;
+        }
+        
+        .rdv-item .heure {
+            font-weight: 600;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .footer {
+            background: #1a1a1a;
+            color: #999;
+            padding: 50px 0 20px;
+            margin-left: 280px;
+        }
+        
+        .footer-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .footer {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accueil' %}">
+                <i class="fas fa-home me-2"></i>Agence Immobilière
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accueil' %}">
+                            <i class="fas fa-home me-1"></i>Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'propos' %}">
+                            <i class="fas fa-info-circle me-1"></i>À propos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'propierte' %}">
+                            <i class="fas fa-building me-1"></i>Propriétés
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'agent' %}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'deconnexion' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>
+                <i class="fas fa-tachometer-alt"></i> Menu Agent
+            </h2>
+
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'agent' %}" class="active"><i class="fas fa-chart-line"></i> Tableau de bord</a></li>
+                <li><a href="{% url 'agent' %}?section=proprietes"><i class="fas fa-building"></i> Mes propriétés</a></li>
+                <li><a href="{% url 'agent' %}?section=clients"><i class="fas fa-users"></i> Mes clients</a></li>
+                <li><a href="{% url 'agent' %}?section=rdv"><i class="fas fa-calendar-check"></i> Rendez-vous</a></li>
+                <li class="logout"><a href="{% url 'deconnexion' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>
+                        <i class="fas fa-chart-line"></i> Tableau de bord Agent
+                    </h1>
+                    <p class="text-muted mb-0">{{ mois_courant }}</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">{{ agent.first_name }} {{ agent.last_name }}</div>
+                    <div class="user-role">
+                        <i class="fas fa-user-tie me-1"></i> Agent • {{ agent.profil.telephone|default:"-" }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Flash -->
+            {% if messages %} {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show">
+                <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %} me-2"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %} {% endif %}
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
+                    <div class="stat-title">Mes propriétés</div>
+                    <div class="stat-number">{{ total_mes_proprietes|default:"0" }}</div>
+                    <div class="stat-label">
+                        {{ proprietes_vente|default:"0" }} vente • {{ proprietes_location|default:"0" }} location
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-title">Mes clients</div>
+                    <div class="stat-number">{{ total_mes_clients|default:"0" }}</div>
+                    <div class="stat-label">
+                        <i class="fas fa-arrow-up text-success me-1"></i> +{{ nouveaux_clients|default:"0" }} 30 jours
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                    <div class="stat-title">Valeur totale</div>
+                    <div class="stat-number">{{ valeur_totale|floatformat:0 }} FCFA</div>
+                    <div class="stat-label">Prix moyen: {{ prix_moyen|floatformat:0 }} FCFA</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-title">Rendez-vous</div>
+                    <div class="stat-number">{{ total_mes_rdv|default:"0" }}</div>
+                    <div class="stat-label">
+                        {{ rdv_aujourdhui|default:"0" }} aujourd'hui • {{ rdv_semaine|default:"0" }} cette semaine
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-bolt"></i> Actions rapides</h3>
+                </div>
+                <div class="section-body">
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="openModal('ajouterPropriete')">
+                            <i class="fas fa-plus-circle"></i>
+                            Ajouter une propriété
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendrier des rendez-vous -->
+            <div class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-calendar-week"></i> Prochains rendez-vous</h3>
+                    <span class="badge badge-warning">{{ rdv_en_attente|default:"0" }} en attente</span>
+                </div>
+                <div class="section-body">
+                    {% if calendrier_rdv %}
+                    <div class="calendar-grid">
+                        {% for jour in calendrier_rdv %}
+                        <div class="calendar-day">
+                            <h4>{{ jour.jour_semaine|capfirst }} {{ jour.jour_formate }}</h4>
+                            {% for rdv in jour.rdv %}
+                            <div class="rdv-item">
+                                <div class="heure">{{ rdv.heure|time:"H:i" }}</div>
+                                <div><strong>{{ rdv.client.first_name }} {{ rdv.client.last_name }}</strong></div>
+                                <div>{{ rdv.propriete.type_bien }} - {{ rdv.lieu }}</div>
+                                <div class="mt-2">
+                                    <span class="badge 
+                                                    {% if rdv.statut == 'confirme' %}badge-success
+                                                    {% elif rdv.statut == 'annule' %}badge-danger
+                                                    {% else %}badge-warning{% endif %}">
+                                                    {{ rdv.get_statut_display }}
+                                                </span> {% if rdv.statut == 'en_attente' %}
+                                    <button class="btn-icon check" onclick="modifierRdv({{ rdv.id }}, 'confirme')" title="Confirmer">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                    <button class="btn-icon cancel" onclick="modifierRdv({{ rdv.id }}, 'annule')" title="Annuler">
+                                                        <i class="fas fa-times"></i>
+                                                    </button> {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Aucun rendez-vous prévu dans les 7 prochains jours</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Deux colonnes : Derniers RDV et Derniers clients -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-clock"></i> Derniers rendez-vous</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Date/Heure</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for rdv in derniers_rdv %}
+                                        <tr>
+                                            <td>{{ rdv.client.first_name }} {{ rdv.client.last_name }}</td>
+                                            <td>{{ rdv.date|date:"d/m/Y" }} {{ rdv.heure|time:"H:i" }}</td>
+                                            <td>
+                                                <span class="badge 
+                                                        {% if rdv.statut == 'confirme' %}badge-success
+                                                        {% elif rdv.statut == 'annule' %}badge-danger
+                                                        {% else %}badge-warning{% endif %}">
+                                                        {{ rdv.get_statut_display }}
+                                                    </span>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted">Aucun rendez-vous</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-user-plus"></i> Derniers clients</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Téléphone</th>
+                                            <th>Inscription</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for client in derniers_clients %}
+                                        <tr>
+                                            <td>{{ client.first_name }} {{ client.last_name }}</td>
+                                            <td>{{ client.profil.telephone|default:"-" }}</td>
+                                            <td>{{ client.date_joined|date:"d/m/Y" }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted">Aucun client</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top propriétés -->
+            <div class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-star"></i> Top propriétés (par prix)</h3>
+                </div>
+                <div class="section-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Adresse</th>
+                                    <th>Surface</th>
+                                    <th>Prix</th>
+                                    <th>Bailleur</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prop in top_proprietes %}
+                                <tr>
+                                    <td>{{ prop.get_type_bien_display }}</td>
+                                    <td>{{ prop.adresse|truncatechars:30 }}</td>
+                                    <td>{{ prop.surface }} m²</td>
+                                    <td>{{ prop.prix|floatformat:0 }} FCFA</td>
+                                    <td>{{ prop.bailleur.first_name }} {{ prop.bailleur.last_name }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">Aucune propriété</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dernières propriétés ajoutées -->
+            <div class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-history"></i> Dernières propriétés ajoutées</h3>
+                </div>
+                <div class="section-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Adresse</th>
+                                    <th>Prix</th>
+                                    <th>Bailleur</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prop in dernieres_proprietes %}
+                                <tr>
+                                    <td>{{ prop.get_type_bien_display }}</td>
+                                    <td>{{ prop.adresse|truncatechars:30 }}</td>
+                                    <td>{{ prop.prix|floatformat:0 }} FCFA</td>
+                                    <td>{{ prop.bailleur.first_name }} {{ prop.bailleur.last_name }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Aucune propriété</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AJOUTER PROPRIÉTÉ -->
+    <div id="modalAjouterPropriete" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Ajouter une propriété</h2>
+                <span class="close" onclick="closeModal('ajouterPropriete')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="ajouter_propriete">
+
+                    <div class="form-group">
+                        <label>Type de bien</label>
+                        <select name="type_bien" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option value="villa">Villa</option>
+                            <option value="appartement">Appartement</option>
+                            <option value="terrain">Terrain</option>
+                            <option value="bureau">Bureau</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Option</label>
+                        <select name="option" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option value="vente">Vente</option>
+                            <option value="location">Location</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Adresse complète</label>
+                        <input type="text" name="adresse" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Surface (m²)</label>
+                        <input type="number" step="0.01" name="surface" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre de pièces</label>
+                        <input type="number" name="nombre_piece" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Année de construction</label>
+                        <input type="number" name="annee" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prix (FCFA)</label>
+                        <input type="number" name="prix" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select name="categorie" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            {% for cat in liste_categories %}
+                                <option value="{{ cat.id }}">{{ cat.type_categorie }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bailleur</label>
+                        <select name="bailleur" class="form-control" required>
+                            <option value="">-- Sélectionner --</option>
+                            {% for bailleur in liste_bailleurs %}
+                                <option value="{{ bailleur.id }}">{{ bailleur.first_name }} {{ bailleur.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('ajouterPropriete')">Annuler</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-2"></i>Ajouter
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="footer-title">Agence Immobilière</h5>
+                    <p>Votre partenaire de confiance pour tous vos projets immobiliers.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5 class="footer-title">Liens rapides</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                        <li><a href="{% url 'propos' %}">À propos</a></li>
+                        <li><a href="{% url 'propierte' %}">Propriétés</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Contact</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone me-2"></i>+225 07 89 65 43 21</li>
+                        <li><i class="fas fa-envelope me-2"></i>contact@agenceimmo.ci</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>Abidjan, Cocody</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="footer-title">Suivez-nous</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {% now "Y" %} Agence Immobilière. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Ouvrir modal
+        function openModal(type) {
+            const modalId = 'modal' + type.charAt(0).toUpperCase() + type.slice(1);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        // Fermer modal
+        function closeModal(type) {
+            const modalId = 'modal' + type.charAt(0).toUpperCase() + type.slice(1);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Modifier statut rendez-vous
+        function modifierRdv(rdvId, statut) {
+            if (confirm(`Voulez-vous ${statut === 'confirme' ? 'confirmer' : 'annuler'} ce rendez-vous ?`)) {
+                // Récupérer le token CSRF
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.style.display = 'none';
+
+                // Ajouter le token CSRF
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+
+                // Ajouter les données
+                const actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = 'modifier_rdv';
+                form.appendChild(actionInput);
+
+                const rdvIdInput = document.createElement('input');
+                rdvIdInput.type = 'hidden';
+                rdvIdInput.name = 'rdv_id';
+                rdvIdInput.value = rdvId;
+                form.appendChild(rdvIdInput);
+
+                const statutInput = document.createElement('input');
+                statutInput.type = 'hidden';
+                statutInput.name = 'statut';
+                statutInput.value = statut;
+                form.appendChild(statutInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Fermer les modals en cliquant dehors
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
