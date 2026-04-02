@@ -161,16 +161,16 @@ def deconnexion_view(request):
     return redirect('accueil')
 
 
-def deconnexion_view(request):
+
+from django.contrib import messages
+
+def deconnexion(request):
     """
-    Vue de déconnexion
+    Vue pour déconnecter l'utilisateur
     """
     logout(request)
-    messages.success(request, "👋 Vous avez été déconnecté avec succès.")
+    messages.success(request, "✅ Vous avez été déconnecté avec succès.")
     return redirect('accueil')
-    
-    return render(request, 'SE/connection.html')
-
 
 
 
@@ -185,13 +185,13 @@ def inscription(request):
         try:
             profil = request.user.profil
             if profil.role == 'bailleur':
-                return redirect('/SE/dashboard_bailleur/')
+                return redirect('/SE/bailleur/')
             elif profil.role == 'agent':
-                return redirect('/SE/dashboard_agent/')
+                return redirect('/SE/agent/')
             elif profil.role == 'manager':
-                return redirect('/SE/dashboard_manager/')
+                return redirect('/SE/manager/')
             else:
-                return redirect('/SE/dashboard_client/')
+                return redirect('/SE/client/')
         except:
             return redirect('/SE/accueil/')
     
@@ -216,11 +216,11 @@ def inscription(request):
                 # Rediriger vers le dashboard selon le rôle
                 role = form.cleaned_data['role']
                 if role == 'bailleur':
-                    return redirect('/SE/dashboard_bailleur/')
+                    return redirect('/SE/bailleur/')
                 elif role == 'agent':
-                    return redirect('/SE/dashboard_agent/')
+                    return redirect('/SE/agent/')
                 elif role == 'manager':
-                    return redirect('/SE/dashboard_manager/')
+                    return redirect('/SE/manager/')
                 else:  # client
                     return redirect('/SE/client/')
                     
@@ -359,11 +359,119 @@ def propierte(request):
     return render(request, 'SE/propierte.html')
 
 
-
 def propos(request):
+    """
+    Page À propos du projet immobilier - Présentation de l'étudiant
+    """
+    # Informations sur l'étudiant
+    etudiant = {
+        'nom': 'ELVIS SEBGO',
+        'prenom': 'SEBGO',
+        'nom_complet': 'SEBGO ELVIS',
+        'email': 'sebgoelvis842@gmail.com',
+        'telephone': '+226 54 79 14 68',
+        'matricule': '10056424',
+        'filiere': 'Informatique de Gestion',
+        'universite': 'Université de Ouagadougou',
+        'annee_etude': 'Licence 3',
+        'photo': 'profil.jpeg',  # À remplacer par votre vraie photo
+        'portfolio': 'https://github.com/DEVELOPISS4',  # Lien vers votre portfolio
+        'linkedin': 'https://linkedin.com/in/votre-profil',
+        'github': 'https://github.com/DEVELOPISS4',
+    }
     
+    # Informations sur le projet
+    projet = {
+        'nom': 'Gestion Immobilière - Agence Immobilière',
+        'annee': 2026,
+        'version': '1.0.0',
+        'description': 'Application web de gestion immobilière permettant la gestion des biens, des clients, des agents et des rendez-vous.',
+    }
     
-    return render(request, 'SE/propos.html')
+    # Fonctionnalités du site
+    fonctionnalites = [
+        {
+            'icone': 'fas fa-user-plus',
+            'titre': 'Gestion des utilisateurs',
+            'description': 'Inscription et gestion des clients, agents, bailleurs et managers avec des rôles distincts.',
+            'couleur': '#8b5cf6'
+        },
+        {
+            'icone': 'fas fa-building',
+            'titre': 'Gestion des propriétés',
+            'description': 'Ajout, modification et suppression de biens immobiliers avec filtres par type, option et prix.',
+            'couleur': '#10b981'
+        },
+        {
+            'icone': 'fas fa-calendar-check',
+            'titre': 'Prise de rendez-vous',
+            'description': 'Les clients peuvent prendre des rendez-vous pour visiter les propriétés et les agents peuvent confirmer ou annuler.',
+            'couleur': '#f59e0b'
+        },
+        {
+            'icone': 'fas fa-chart-line',
+            'titre': 'Tableaux de bord',
+            'description': 'Tableaux de bord personnalisés pour les agents, managers, bailleurs et clients avec statistiques en temps réel.',
+            'couleur': '#3b82f6'
+        },
+        {
+            'icone': 'fas fa-heart',
+            'titre': 'Favoris',
+            'description': 'Les clients peuvent ajouter leurs propriétés préférées et les retrouver facilement.',
+            'couleur': '#ef4444'
+        },
+        {
+            'icone': 'fas fa-chart-pie',
+            'titre': 'Statistiques avancées',
+            'description': 'Visualisation des performances des agents, du nombre de transactions et des tendances du marché.',
+            'couleur': '#8b5cf6'
+        },
+        {
+            'icone': 'fas fa-envelope',
+            'titre': 'Notifications',
+            'description': 'Système de notifications pour les confirmations de rendez-vous et les nouvelles propriétés.',
+            'couleur': '#06b6d4'
+        },
+        {
+            'icone': 'fas fa-shield-alt',
+            'titre': 'Sécurité',
+            'description': 'Authentification sécurisée, gestion des rôles et protection des données utilisateurs.',
+            'couleur': '#6366f1'
+        }
+    ]
+    
+    # Technologies utilisées
+    technologies = [
+        {'nom': 'Python', 'icone': 'fab fa-python', 'couleur': '#3776ab'},
+        {'nom': 'Django', 'icone': 'fab fa-python', 'couleur': '#092e20'},
+        {'nom': 'Bootstrap', 'icone': 'fab fa-bootstrap', 'couleur': '#7952b3'},
+        {'nom': 'SQLite', 'icone': 'fas fa-database', 'couleur': '#003b57'},
+        {'nom': 'HTML5', 'icone': 'fab fa-html5', 'couleur': '#e34f26'},
+        {'nom': 'CSS3', 'icone': 'fab fa-css3-alt', 'couleur': '#1572b6'},
+        {'nom': 'JavaScript', 'icone': 'fab fa-js', 'couleur': '#f7df1e'},
+        {'nom': 'Font Awesome', 'icone': 'fab fa-font-awesome', 'couleur': '#528dd7'},
+    ]
+    
+    # Objectifs du projet
+    objectifs = [
+        'Centraliser la gestion des biens immobiliers',
+        'Faciliter la communication entre clients et agents',
+        'Automatiser la prise de rendez-vous',
+        'Offrir une vision claire des performances commerciales',
+        'Sécuriser l\'accès aux données selon les rôles',
+        'Améliorer l\'expérience utilisateur',
+    ]
+    
+    context = {
+        'etudiant': etudiant,
+        'projet': projet,
+        'fonctionnalites': fonctionnalites,
+        'technologies': technologies,
+        'objectifs': objectifs,
+        'page_title': 'À propos',
+    }
+    
+    return render(request, 'SE/propos.html', context)
 
 
 
@@ -936,3 +1044,87 @@ def manager(request):
     }
     
     return render(request, 'SE/dashboard_manager.html', context)
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils import timezone
+from .models import Propriete, RendezVous
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils import timezone
+from .models import Propriete, RendezVous
+
+@login_required
+def rdv(request):
+    """
+    Page de prise de rendez-vous
+    """
+    # Récupérer l'ID de la propriété depuis l'URL ou le POST
+    propriete_id = request.GET.get('propriete_id') or request.POST.get('propriete_id')
+    
+    if not propriete_id:
+        messages.error(request, "❌ Veuillez sélectionner une propriété d'abord.")
+        return redirect('accueil')
+    
+    # Récupérer la propriété
+    propriete = get_object_or_404(Propriete, id=propriete_id)
+    
+    # Vérifier que l'utilisateur est un client
+    if not hasattr(request.user, 'profil') or request.user.profil.role != 'client':
+        messages.error(request, "❌ Seuls les clients peuvent prendre des rendez-vous.")
+        return redirect('accueil')
+    
+    if request.method == 'POST':
+        date = request.POST.get('date')
+        
+        # Vérifier que la date est remplie
+        if not date:
+            messages.error(request, "❌ Veuillez choisir une date.")
+            return redirect('rdv')
+        
+        # Convertir la date
+        try:
+            date_rdv = timezone.datetime.strptime(date, '%Y-%m-%d').date()
+        except ValueError:
+            messages.error(request, "❌ Format de date invalide.")
+            return redirect('rdv')
+        
+        # Vérifier que la date n'est pas dans le passé
+        if date_rdv < timezone.now().date():
+            messages.error(request, "❌ Vous ne pouvez pas prendre un rendez-vous dans le passé.")
+            return redirect('rdv')
+        
+        # Créer le rendez-vous
+        try:
+            RendezVous.objects.create(
+                client=request.user,
+                propriete=propriete,
+                date=date_rdv,
+                heure=timezone.datetime.strptime('10:00', '%H:%M').time(),
+                lieu="Agence Immobilière",
+                adresse=propriete.adresse,
+                statut='en_attente'
+            )
+            
+            messages.success(
+                request, 
+                f"✅ Votre rendez-vous pour le {date_rdv.strftime('%d/%m/%Y')} a été enregistré ! "
+                f"L'agent vous contactera pour confirmer."
+            )
+            return redirect('accueil')
+            
+        except Exception as e:
+            messages.error(request, f"❌ Une erreur est survenue : {str(e)}")
+            return redirect('rdv')
+    
+    context = {
+        'propriete': propriete,
+        'aujourd_hui': timezone.now().date().isoformat(),
+        'page_title': 'Prendre rendez-vous',
+    }
+    
+    return render(request, 'SE/rdv.html', context)

@@ -515,10 +515,10 @@
 
                         <div class="d-grid gap-2">
                             <a href="#" class="btn btn-details">
-                                <i class="fas fa-eye me-2"></i>Voir les détails
+                                <!--       <i class="fas fa-eye me-2"></i>Voir les détails-->
                             </a>
-                            <a href="#" class="btn btn-rdv">
-                                <i class="fas fa-calendar-check me-2"></i>Prendre RDV
+                            <a href="{% url 'rdv' %}?propriete_id={{ propriete.id }}" class="btn btn-rdv">
+                                <i class="fas fa-calendar-check me-2"></i>Rendez-vous
                             </a>
                         </div>
                     </div>
@@ -601,7 +601,7 @@
                     <ul class="footer-links">
                         <li><a href="{% url 'accueil' %}">Accueil</a></li>
                         <li><a href="{% url 'propos' %}">À propos</a></li>
-                        <li><a href="{% url 'propierte' %}">Propriétés</a></li>
+                        <!--   <li><a href="{% url 'propierte' %}">Propriétés</a></li>-->
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>

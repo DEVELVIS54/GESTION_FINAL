@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos - Agence Immobilière</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* Style global */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+            background-color: #f5f7fb;
+        }
+        /* Header/Navbar - Noir */
+        
+        .navbar {
+            background-color: #1e293b !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: #fff !important;
+        }
+        
+        .navbar-brand i {
+            color: #8b5cf6;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            margin: 0 8px;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 8px;
+        }
+        
+        .nav-link:hover {
+            color: #8b5cf6 !important;
+        }
+        
+        .nav-link.active {
+            color: #8b5cf6 !important;
+        }
+        /* Hero Section */
+        
+        .page-hero {
+            background: linear-gradient(135deg, #1e293b 0%, #2d3748 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .page-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .page-hero h1 i {
+            color: #8b5cf6;
+        }
+        
+        .page-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        /* Section générale */
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-light {
+            background-color: #fff;
+        }
+        
+        .section-gray {
+            background-color: #f8f9fa;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #8b5cf6;
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+        /* Carte étudiant */
+        
+        .student-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .student-photo {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .student-photo img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .student-info {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .student-info h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .student-info .matricule {
+            color: #8b5cf6;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .student-info .details {
+            text-align: left;
+            margin: 20px 0;
+        }
+        
+        .student-info .details p {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+        
+        .student-info .details i {
+            width: 30px;
+            color: #8b5cf6;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b5cf6;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: translateY(-3px);
+        }
+        /* Carte fonctionnalité */
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .feature-icon i {
+            font-size: 2rem;
+            color: #8b5cf6;
+        }
+        
+        .feature-card h3 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        /* Grille technologies */
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .tech-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tech-item i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .tech-item span {
+            display: block;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        /* Objectifs */
+        
+        .objectifs-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .objectif-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .objectif-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .objectif-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .objectif-icon i {
+            font-size: 1.5rem;
+            color: #8b5cf6;
+        }
+        
+        .objectif-text {
+            flex: 1;
+        }
+        
+        .objectif-text h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .objectif-text p {
+            color: #7f8c8d;
+            margin: 0;
+        }
+        /* Footer */
+        
+        .footer {
+            background: #1e293b;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        
+        .footer h5 {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer h5:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #8b5cf6;
+            border-radius: 2px;
+        }
+        
+        .footer p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #8b5cf6;
+        }
+        
+        .footer-links i {
+            width: 25px;
+            color: #8b5cf6;
+            margin-right: 8px;
+        }
+        
+        .social-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-footer a {
+            width: 40px;
+            height: 40px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b5cf6;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-footer a:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .section {
+                padding: 50px 0;
+            }
+            .page-hero h1 {
+                font-size: 1.8rem;
+            }
+            .objectif-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        /* Alert messages */
+        
+        .alert {
+            border-radius: 12px;
+            border-left: 5px solid #8b5cf6;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header/Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accueil' %}">
+                <i class="fas fa-home me-2"></i>Agence Immobilière
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'accueil' %}active{% endif %}" href="{% url 'accueil' %}">
+                            <i class="fas fa-home me-1"></i>Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'propos' %}active{% endif %}" href="{% url 'propos' %}">
+                            <i class="fas fa-info-circle me-1"></i>À propos
+                        </a>
+                        <!--   </li>
+                   <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'propierte' %}active{% endif %}" href="{% url 'propierte' %}">
+                            <i class="fas fa-building me-1"></i>
+                        </a>
+                    </li>
+-->
+                        {% if user.is_authenticated %}
+                        <!-- Menu pour utilisateur connecté -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="
+                                {% if user.profil.role == 'bailleur' %}
+                                    {% url 'bailleur' %}
+                                {% elif user.profil.role == 'agent' %}
+                                    {% url 'agent' %}
+                                {% elif user.profil.role == 'manager' %}
+                                    {% url 'dashboard_manager' %}
+                                {% else %}
+                                    {% url 'client' %}
+                                {% endif %}
+                            ">
+                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="{% url 'connexion' %}">
+                                <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                            </a>
+                        </li>
+                        {% else %}
+                        <!-- Menu pour utilisateur non connecté -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'inscription' %}active{% endif %}" href="{% url 'inscription' %}">
+                                <i class="fas fa-user-plus me-1"></i>Inscription
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'connexion' %}active{% endif %}" href="{% url 'connexion' %}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                            </a>
+                        </li>
+                        {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1><i class="fas fa-info-circle me-3"></i>À propos du projet</h1>
+            <p>Découvrez le projet personnel réalisé par SEBGO ELVIS, étudiant en Licence 2 genie informatique</p>
+        </div>
+    </section>
+
+    <!-- Messages Flash -->
+    <div class="container mt-4">
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %} me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %} {% endif %}
+    </div>
+
+    <!-- Présentation de l'étudiant -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>L'ÉTUDIANT</h2>
+                <p>Le développeur derrière ce projet</p>
+
+            </div>
+            {% load static %}
+            <div class="row justify-content-center">
+                <div class="col-md-6" data-aos="fade-up">
+                    <div class="student-card">
+                        <div class="student-photo">
+                            <img src="{% static 'images/profil.jpeg' %}" alt="ELVIS SEBGO" style="width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid #8b5cf6;"> </div>
+                        <div class="student-info">
+                            <h3>{{ etudiant.nom_complet }}</h3>
+                            <div class="matricule">Matricule: {{ etudiant.matricule }}</div>
+                            <div class="details">
+                                <p><i class="fas fa-graduation-cap"></i> <strong>Filière:</strong> {{ etudiant.filiere }}</p>
+                                <p><i class="fas fa-university"></i> <strong>Université:</strong> {{ etudiant.universite }}</p>
+                                <p><i class="fas fa-calendar-alt"></i> <strong>Niveau:</strong> {{ etudiant.annee_etude }}</p>
+                                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ etudiant.email }}</p>
+                                <p><i class="fas fa-phone"></i> <strong>Téléphone:</strong> {{ etudiant.telephone }}</p>
+                            </div>
+                            <div class="social-links">
+                                <a href="{{ etudiant.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                                <a href="{{ etudiant.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="{{ etudiant.portfolio }}" target="_blank"><i class="fas fa-briefcase"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Présentation du projet -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="section-title">
+                <h2>LE PROJET</h2>
+                <p>Gestion Immobilière - Application web complète</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center" data-aos="fade-up">
+                    <div class="student-card" style="padding: 30px;">
+                        <div class="feature-icon" style="margin: 0 auto 20px; width: 100px; height: 100px;">
+                            <i class="fas fa-building" style="font-size: 3rem;"></i>
+                        </div>
+                        <h3>{{ projet.nom }}</h3>
+                        <p class="text-muted">Version {{ projet.version }} - {{ projet.annee }}</p>
+                        <p style="margin-top: 20px; line-height: 1.8;">{{ projet.description }}</p>
+                        <div class="mt-4">
+                            <span class="badge bg-primary me-2">Python/Django</span>
+                            <span class="badge bg-primary me-2">Bootstrap 5</span>
+                            <span class="badge bg-primary">SQLite</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objectifs du projet -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>OBJECTIFS DU PROJET</h2>
+                <p>Ce que cette application vise à accomplir</p>
+            </div>
+            <div class="objectifs-list">
+                {% for objectif in objectifs %}
+                <div class="objectif-item" data-aos="fade-right" data-aos-delay="{{ forloop.counter0|add:0 }}">
+                    <div class="objectif-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="objectif-text">
+                        <h4>{{ objectif }}</h4>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Fonctionnalités -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="section-title">
+                <h2>FONCTIONNALITÉS</h2>
+                <p>Les principales fonctionnalités de l'application</p>
+            </div>
+            <div class="features-grid">
+                {% for f in fonctionnalites %}
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:0 }}">
+                    <div class="feature-icon">
+                        <i class="{{ f.icone }}"></i>
+                    </div>
+                    <h3>{{ f.titre }}</h3>
+                    <p>{{ f.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies utilisées -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>TECHNOLOGIES UTILISÉES</h2>
+                <p>Les outils et frameworks utilisés pour ce projet</p>
+            </div>
+            <div class="tech-grid">
+                {% for tech in technologies %}
+                <div class="tech-item" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:0 }}">
+                    <i class="{{ tech.icone }}" style="color: {{ tech.couleur }};"></i>
+                    <span>{{ tech.nom }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Agence Immobilière</h5>
+                    <p>Application de gestion immobilière développée dans le cadre du projet de fin d'année.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5>Liens rapides</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'accueil' %}"><i class="fas fa-chevron-right"></i> Accueil</a></li>
+                        <li><a href="{% url 'propos' %}"><i class="fas fa-chevron-right"></i> À propos</a></li>
+                        <li><a href="{% url 'propierte' %}"><i class="fas fa-chevron-right"></i> Propriétés</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> {{ etudiant.telephone }}</li>
+                        <li><i class="fas fa-envelope"></i> {{ etudiant.email }}</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Burkina Faso, Ouagadougou</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Suivez-moi</h5>
+                    <div class="social-footer">
+                        <a href="{{ etudiant.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="{{ etudiant.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="{{ etudiant.portfolio }}" target="_blank"><i class="fas fa-briefcase"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {% now "Y" %} {{ etudiant.nom_complet }} - Projet de fin d'année | Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+</body>
+
+</html>
