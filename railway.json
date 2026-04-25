@@ -1,6 +1,6 @@
 {
   "deploy": {
-    "startCommand": "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py createsuperuser --noinput && gunicorn gif.wsgi:application",
+    "startCommand": "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py createsuperuser --noinput || true && gunicorn gif.wsgi:application",
     "restartPolicyType": "ON_FAILURE"
   }
 }
