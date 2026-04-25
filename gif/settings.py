@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'd$irgqs^op+=5okx1@ov@r11_q+t*86dbu^8j@o=2u8_q0@(+o')
 DEBUG = os.environ.get('DEBUG') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-
+CSRF_TRUSTED_ORIGINS = ['https://gestionfinal-production.up.railway.app']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
