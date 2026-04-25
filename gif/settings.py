@@ -4,7 +4,7 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('d$irgqs^op+=5okx1@ov@r11_q+t*86dbu^8j@o=2u8_q0@(+o')  # ← clé fixée
+SECRET_KEY = os.environ.get('SECRET_KEY', 'd$irgqs^op+=5okx1@ov@r11_q+t*86dbu^8j@o=2u8_q0@(+o')
 DEBUG = os.environ.get('DEBUG') == 'True'  # ← 'True' pas 'Fals'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')  # ← ligne parasite supprimée
 
